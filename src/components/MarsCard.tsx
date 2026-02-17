@@ -75,18 +75,7 @@ export default function MarsCard({ currentWork, style }: MarsCardProps) {
             }}
             className="group"
         >
-            <div className="glass-card" style={{
-                background: 'rgba(20, 20, 20, 0.40)', // Darker, more opaque background
-                backdropFilter: 'blur(40px) saturate(180%)', // High blur + saturation for "liquid" look
-                WebkitBackdropFilter: 'blur(40px) saturate(180%)', // Safari support
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderTop: '1px solid rgba(255, 255, 255, 0.2)', // Highlight top border
-                borderRadius: 24, // Slightly rounder
-                padding: '2.5rem',
-                maxWidth: 480,
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05)',
-                color: 'white',
-            }}>
+            <div className="glass-card">
                 <p style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '0.65rem',
@@ -137,10 +126,30 @@ export default function MarsCard({ currentWork, style }: MarsCardProps) {
             </div>
 
             <style jsx global>{`
-                .glass-card:hover {
-                    background: rgba(255, 255, 255, 0.06) !important;
-                    transform: translateY(-4px);
+                .glass-card {
+                    background: rgba(20, 20, 20, 0.40);
+                    backdrop-filter: blur(40px) saturate(180%);
+                    -webkit-backdrop-filter: blur(40px) saturate(180%);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-top: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 24px;
+                    padding: 2.5rem;
+                    max-width: 480px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+                    color: white;
                     transition: all 0.3s ease;
+                }
+                
+                @media (max-width: 640px) {
+                    .glass-card {
+                        padding: 1.5rem;
+                        border-radius: 16px;
+                    }
+                }
+
+                .glass-card:hover {
+                    background: rgba(255, 255, 255, 0.06);
+                    transform: translateY(-4px);
                 }
             `}</style>
         </motion.div>

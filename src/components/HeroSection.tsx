@@ -15,7 +15,7 @@ export default function HeroSection({ config, scrollProgress }: HeroSectionProps
 
     return (
         <div
-            className="hero-overlay"
+            className="hero-overlay responsive-hero-padding"
             style={{
                 opacity: heroOpacity,
                 transform: `translateY(${heroY}px)`,
@@ -34,7 +34,7 @@ export default function HeroSection({ config, scrollProgress }: HeroSectionProps
 
             <motion.h1
                 className="serif font-bold leading-tight mb-4"
-                style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', color: 'var(--text-primary)' }}
+                style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)', color: 'var(--text-primary)' }}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.8, ease: [0.4, 0, 0.2, 1] as const }}
@@ -83,6 +83,6 @@ export default function HeroSection({ config, scrollProgress }: HeroSectionProps
                     scroll to explore ↓
                 </p>
             </motion.div>
-        </div>
+        </div >
     );
 }

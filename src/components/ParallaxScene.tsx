@@ -22,6 +22,9 @@ const sunUrl = '/models/sun.glb';
 // --- ATOM GROUP (Right Side, Small, Equation on Nucleus) ---
 function AtomGroup({ progress }: { progress: number }) {
     const ref = useRef<THREE.Group>(null);
+    const { viewport } = useThree();
+    const isMobile = viewport.width < 6;
+
     const material = useMemo(() => new THREE.MeshBasicMaterial({ color: '#9b9b9bff', side: THREE.DoubleSide }), []);
     const nucleusMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#aaa0a0ff', roughness: 0.3 }), []);
 
@@ -29,17 +32,18 @@ function AtomGroup({ progress }: { progress: number }) {
         // Fade out as Sun appears (0.25)
         const fadeT = smoothstep(clamp01((progress - 0.15) / 0.2));
         if (ref.current) {
-            const scale = lerp(0.7, 0, fadeT); // Start Scale 0.7 (Reduced Size)
+            const baseScale = isMobile ? 0.5 : 0.7;
+            const scale = lerp(baseScale, 0, fadeT);
             ref.current.scale.setScalar(scale);
             ref.current.visible = fadeT < 1;
         }
     });
 
     return (
-        // Positioned on Right Side (x=2.5) for Phase 0
-        <group ref={ref} position={[3, 0, 0]}>
+        // Positioned on Right Side (x=3) for Phase 0, or Center for mobile
+        <group ref={ref} position={isMobile ? [0, 1.3, 0] : [3, 0, 0]} rotation={isMobile ? [0, 0, 0] : [0, 0, 0]}>
             {/* Nucleus */}
-            <Sphere args={[0.5, 0, 32]} material={nucleusMat}>
+            <Sphere args={[0.5, isMobile ? 32 : 0, 32]} material={nucleusMat}>
                 {/* Equation Centered on Nucleus */}
 
                 <Html position={[0, 0, 0]} center transform style={{ pointerEvents: 'none' }}>
