@@ -126,7 +126,7 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
                     AboutSection appears naturally after scrolling 250vh.
                 */}
 
-                <AboutSection about={config.about} education={config.education} />
+                {/* <AboutSection about={config.about} education={config.education} /> */}
 
                 {/* 
                     Sections 3+ (Publications, etc.)
@@ -148,7 +148,7 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
                         personalImages={config.personalImages}
                     />
 
-                    <Footer name={config.name} email={config.email} />
+                    <Footer name={config.name} />
                 </div>
             </main>
         </div>

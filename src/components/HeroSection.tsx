@@ -78,6 +78,7 @@ export default function HeroSection({ config, scrollProgress }: HeroSectionProps
                 animate={{ opacity: 0.5 }}
                 transition={{ delay: 2, duration: 1 }}
             >
+
                 <p className="mono text-[10px] tracking-widest uppercase" style={{ color: 'var(--text-tertiary)' }}>
                     scroll to explore ↓
                 </p>

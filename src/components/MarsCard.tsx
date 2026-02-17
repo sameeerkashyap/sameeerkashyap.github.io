@@ -76,14 +76,16 @@ export default function MarsCard({ currentWork, style }: MarsCardProps) {
             className="group"
         >
             <div className="glass-card" style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: 20,
+                background: 'rgba(20, 20, 20, 0.40)', // Darker, more opaque background
+                backdropFilter: 'blur(40px) saturate(180%)', // High blur + saturation for "liquid" look
+                WebkitBackdropFilter: 'blur(40px) saturate(180%)', // Safari support
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderTop: '1px solid rgba(255, 255, 255, 0.2)', // Highlight top border
+                borderRadius: 24, // Slightly rounder
                 padding: '2.5rem',
                 maxWidth: 480,
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                color: 'white', // Ensure text is visible against space background
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05)',
+                color: 'white',
             }}>
                 <p style={{
                     fontFamily: "'JetBrains Mono', monospace",

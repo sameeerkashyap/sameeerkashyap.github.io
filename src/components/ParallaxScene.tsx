@@ -148,12 +148,27 @@ function SunModel({ scrollProgress }: { scrollProgress: number }) {
     useMemo(() => {
         scene.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
-                const material = (child as THREE.Mesh).material;
-                if (material) {
-                    if (Array.isArray(material)) {
-                        material.forEach(m => (m.transparent = true));
+                const mesh = child as THREE.Mesh;
+                mesh.renderOrder = 1; // Render early
+
+                // Helper to create glowing yellow material
+                const createSunMat = (original: THREE.Material) => {
+                    const newMat = new THREE.MeshBasicMaterial({
+                        color: new THREE.Color("#FDB813"), // Force Yellow
+                        transparent: true,
+                    });
+                    // Preserve texture if exists
+                    if ('map' in original) {
+                        newMat.map = (original as THREE.MeshStandardMaterial).map;
+                    }
+                    return newMat;
+                };
+
+                if (mesh.material) {
+                    if (Array.isArray(mesh.material)) {
+                        mesh.material = mesh.material.map(createSunMat);
                     } else {
-                        material.transparent = true;
+                        mesh.material = createSunMat(mesh.material);
                     }
                 }
             }
@@ -170,8 +185,12 @@ function SunModel({ scrollProgress }: { scrollProgress: number }) {
         scene.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
                 const material = (child as THREE.Mesh).material;
-                if (material && !Array.isArray(material)) {
-                    material.opacity = appear * fade;
+                if (material) {
+                    if (Array.isArray(material)) {
+                        material.forEach(m => (m.opacity = appear * fade));
+                    } else {
+                        material.opacity = appear * fade;
+                    }
                 }
             }
         });
@@ -197,6 +216,8 @@ function MarsModel({ scrollProgress }: { scrollProgress: number }) {
     useMemo(() => {
         scene.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
+                const mesh = child as THREE.Mesh;
+                mesh.renderOrder = 10; // Mars ALWAYS on top of Sun
                 const mat = (child as THREE.Mesh).material as THREE.MeshStandardMaterial;
                 if (mat) mat.transparent = true;
             }

@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { PersonalImage } from '@/lib/types';
-import Image from 'next/image';
 
 interface PersonalSectionProps {
     personalInterests: string[];
@@ -45,16 +44,11 @@ export default function PersonalSection({ personalInterests, personalImages }: P
                         transition={{ delay: i * 0.1, duration: 0.5 }}
                         className="relative rounded-2xl overflow-hidden group"
                     >
-                        <div
-                            className="relative w-full"
-                            style={{ paddingBottom: i % 3 === 0 ? '130%' : i % 3 === 1 ? '100%' : '80%' }}
-                        >
-                            <Image
+                        <div className="relative w-full">
+                            <img
                                 src={img.src}
                                 alt={img.alt}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
+                                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 block"
                             />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
