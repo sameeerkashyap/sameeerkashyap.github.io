@@ -1,228 +1,146 @@
 'use client';
 
-import { useState, Suspense } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { motion } from 'framer-motion';
 import { CurrentWork } from '@/lib/types';
-import { useRef } from 'react';
-import * as THREE from 'three';
-
-/* Small spinning Mars for the card background */
-function SpinningMars() {
-    const { scene } = useGLTF('/models/mars.glb');
-    const ref = useRef<THREE.Group>(null);
-
-    useFrame((state) => {
-        if (!ref.current) return;
-        ref.current.rotation.y = state.clock.elapsedTime * 0.15;
-    });
-
-    return (
-        <group ref={ref} scale={0.0018}>
-            <primitive object={scene} />
-        </group>
-    );
-}
+import { dispatchOpenTab } from '@/components/TabSystem';
 
 interface MarsCardProps {
     currentWork: CurrentWork;
+    style?: React.CSSProperties; // Allow parent to control opacity/visibility
 }
 
-export default function MarsCard({ currentWork }: MarsCardProps) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+/* 
+   Displays the Glassmorphism Card Overlay for the Mars section.
+   The actual 3D Mars model is rendered by the main ParallaxScene behind this card.
+*/
+export default function MarsCard({ currentWork, style }: MarsCardProps) {
 
-    return (
-        <>
-            {/* Mars "card" — full width, Mars spins behind a glass overlay */}
-            <motion.div
-                onClick={() => setIsModalOpen(true)}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.6 }}
-                style={{
-                    position: 'relative',
-                    width: '100%',
-                    minHeight: 340,
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    background: 'radial-gradient(circle at 65% 50%, var(--mars-rust) 0%, #1a0a02 100%)',
-                }}
-            >
-                {/* Three.js Mars spinner behind the card */}
-                <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    zIndex: 0,
-                    opacity: 0.7,
-                }}>
-                    <Canvas
-                        camera={{ position: [0, 0, 3], fov: 45 }}
-                        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-                        dpr={[1, 1.5]}
-                        style={{ width: '100%', height: '100%' }}
-                    >
-                        <ambientLight intensity={0.4} />
-                        <directionalLight position={[3, 2, 5]} intensity={1.2} color="#ffeedd" />
-                        <Suspense fallback={null}>
-                            <SpinningMars />
-                        </Suspense>
-                    </Canvas>
-                </div>
+    const handleOpenTab = () => {
+        dispatchOpenTab({
+            id: 'mars-terraforming',
+            title: 'Terraforming Mars',
+            type: 'detail',
+            icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /></svg>,
+            content: (
+                <div className="p-12 max-w-4xl mx-auto font-sans text-[var(--text-primary)]">
+                    <h1 className="text-4xl font-serif font-bold mb-4">{currentWork.title}</h1>
+                    <div className="h-px w-full bg-[var(--cream-300)] my-6" />
 
-                {/* Card content overlay */}
-                <div style={{
-                    position: 'relative',
-                    zIndex: 2,
-                    padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    minHeight: 340,
-                    background: 'linear-gradient(135deg, rgba(26, 10, 2, 0.85) 0%, rgba(26, 10, 2, 0.4) 50%, rgba(26, 10, 2, 0.2) 100%)',
-                }}>
-                    <p style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '0.65rem',
-                        letterSpacing: '0.15em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.45)',
-                        marginBottom: '0.5rem',
-                    }}>
-                        Current Research
-                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div>
+                            <h3 className="mono text-xs uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Core Concept</h3>
+                            <p className="text-lg leading-relaxed text-[var(--text-secondary)] mb-8">{currentWork.concept}</p>
 
-                    <h2 style={{
-                        fontFamily: "'Source Serif 4', Georgia, serif",
-                        fontSize: 'clamp(1.5rem, 3.5vw, 2.2rem)',
-                        fontWeight: 700,
-                        marginBottom: '0.75rem',
-                        background: 'linear-gradient(90deg, var(--mars-orange), #ffd700, var(--mars-glow), #ffd700, var(--mars-orange))',
-                        backgroundSize: '200% auto',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                        animation: 'mars-shimmer 4s linear infinite',
-                    }}>
-                        {currentWork.title}
-                    </h2>
+                            <h3 className="mono text-xs uppercase tracking-widest text-[var(--text-tertiary)] mb-2">Current Progress</h3>
+                            <p className="text-base leading-relaxed text-[var(--text-secondary)] mb-8">{currentWork.progress}</p>
+                        </div>
 
-                    <p style={{
-                        color: 'rgba(255,255,255,0.7)',
-                        fontSize: '0.85rem',
-                        lineHeight: 1.7,
-                        maxWidth: 550,
-                        marginBottom: '1rem',
-                    }}>
-                        {currentWork.description}
-                    </p>
+                        <div className="bg-[var(--cream-100)] p-8 rounded-2xl border border-[var(--cream-300)]">
+                            <h3 className="mono text-xs uppercase tracking-widest text-[var(--text-tertiary)] mb-4">Reading List</h3>
+                            <ul className="space-y-3">
+                                {currentWork.reading.map(r => (
+                                    <li key={r} className="flex gap-3 text-sm">
+                                        <span className="text-[var(--mars-rust)]">→</span>
+                                        {r}
+                                    </li>
+                                ))}
+                            </ul>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                        {currentWork.tags.map((tag) => (
-                            <span
-                                key={tag}
-                                style={{
-                                    fontSize: '0.65rem',
-                                    padding: '2px 10px',
-                                    borderRadius: 999,
-                                    background: 'rgba(255,255,255,0.1)',
-                                    color: 'rgba(255,255,255,0.65)',
-                                    border: '1px solid rgba(255,255,255,0.12)',
-                                }}
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-
-                    <p style={{
-                        fontFamily: "'JetBrains Mono', monospace",
-                        fontSize: '0.55rem',
-                        letterSpacing: '0.15em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.3)',
-                        marginTop: '1rem',
-                    }}>
-                        Click to explore →
-                    </p>
-                </div>
-            </motion.div>
-
-            {/* Detail modal */}
-            <AnimatePresence>
-                {isModalOpen && (
-                    <motion.div
-                        className="modal-backdrop"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setIsModalOpen(false)}
-                    >
-                        <motion.div
-                            className="modal-panel"
-                            initial={{ opacity: 0, y: 40, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 40, scale: 0.95 }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button className="modal-close" onClick={() => setIsModalOpen(false)}>
-                                ✕
-                            </button>
-
-                            <p className="mono" style={{ fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.5rem', color: 'var(--mars-rust)' }}>
-                                Current Research Focus
-                            </p>
-
-                            <h2 className="serif" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text-primary)' }}>
-                                {currentWork.title}
-                            </h2>
-
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <h3 className="mono" style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.5rem' }}>
-                                    Core Concept
-                                </h3>
-                                <p style={{ fontSize: '0.875rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                                    {currentWork.concept}
-                                </p>
-                            </div>
-
-                            <div style={{ marginBottom: '1.5rem' }}>
-                                <h3 className="mono" style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.5rem' }}>
-                                    Current Progress
-                                </h3>
-                                <p style={{ fontSize: '0.875rem', lineHeight: 1.7, color: 'var(--text-secondary)' }}>
-                                    {currentWork.progress}
-                                </p>
-                            </div>
-
-                            <div style={{ marginBottom: '1rem' }}>
-                                <h3 className="mono" style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.75rem' }}>
-                                    Related Reading
-                                </h3>
-                                <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    {currentWork.reading.map((item) => (
-                                        <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                                            <span style={{ color: 'var(--mars-rust)' }}>→</span>
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', paddingTop: '1rem', borderTop: '1px solid var(--cream-300)' }}>
-                                {currentWork.tags.map((tag) => (
+                            <div className="mt-8 flex flex-wrap gap-2">
+                                {currentWork.tags.map(tag => (
                                     <span key={tag} className="tag">{tag}</span>
                                 ))}
                             </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
+                        </div>
+                    </div>
+                </div>
+            )
+        });
+    };
+
+    return (
+        <motion.div
+            onClick={handleOpenTab}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center', // Vertically center
+                justifyContent: 'flex-start', // Align left
+                padding: 'clamp(2rem, 5vw, 4rem)',
+                cursor: 'pointer',
+                ...style // Parent opacity overrides
+            }}
+            className="group"
+        >
+            <div className="glass-card" style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(16px)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: 20,
+                padding: '2.5rem',
+                maxWidth: 480,
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                color: 'white', // Ensure text is visible against space background
+            }}>
+                <p style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '0.65rem',
+                    letterSpacing: '0.15em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(255,255,255,0.5)',
+                    marginBottom: '1rem',
+                }}>
+                    Current Research
+                </p>
+
+                <h2 style={{
+                    fontFamily: "'Source Serif 4', Georgia, serif",
+                    fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                    fontWeight: 700,
+                    marginBottom: '1rem',
+                    color: '#fff',
+                    textShadow: '0 2px 10px rgba(0,0,0,0.3)',
+                }}>
+                    {currentWork.title}
+                </h2>
+
+                <p style={{
+                    color: 'rgba(255,255,255,0.8)',
+                    fontSize: '0.95rem',
+                    lineHeight: 1.6,
+                    marginBottom: '1.5rem',
+                }}>
+                    {currentWork.description}
+                </p>
+
+                <div className="flex items-center gap-3">
+                    <span style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        color: '#fff',
+                        borderBottom: '1px solid rgba(255,255,255,0.3)',
+                        paddingBottom: 2,
+                    }}>
+                        Open in new tab
+                    </span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                </div>
+            </div>
+
+            <style jsx global>{`
+                .glass-card:hover {
+                    background: rgba(255, 255, 255, 0.06) !important;
+                    transform: translateY(-4px);
+                    transition: all 0.3s ease;
+                }
+            `}</style>
+        </motion.div>
     );
 }
-
-useGLTF.preload('/models/mars.glb');

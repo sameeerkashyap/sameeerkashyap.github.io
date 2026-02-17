@@ -1,156 +1,44 @@
 'use client';
 
-import { useState, ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { WorkExperience, BlogPost, RecommendedReading, Project, ResearchExperience } from '@/lib/types';
-import BrowserTab from './BrowserTab';
+import { dispatchOpenTab } from '@/components/TabSystem';
 
 const CARD_COLORS = ['card-sage', 'card-sky', 'card-lavender', 'card-peach', 'card-rose', 'card-butter'];
 
-/* ========== MODAL CARD GRID ========== */
-interface ColumnModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    children: ReactNode;
-}
+/* ========== DETAIL VIEWS (Content that goes into the tab) ========== */
 
-function ColumnModal({ isOpen, onClose, title, children }: ColumnModalProps) {
+// Helper: Common layout for detail pages
+function DetailLayout({ title, subtitle, meta, children, tags }: any) {
     return (
-        <BrowserTab isOpen={isOpen} onClose={onClose} title={title}>
-            {children}
-        </BrowserTab>
-    );
-}
+        <div className="max-w-3xl mx-auto py-12 px-6">
+            {meta && (
+                <p className="mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-tertiary)' }}>
+                    {meta}
+                </p>
+            )}
 
-/* ========== DETAIL VIEW COMPONENTS ========== */
-function WorkDetailView({ item }: { item: WorkExperience }) {
-    return (
-        <div>
-            <p className="mono text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-                {item.period}
-            </p>
-            <h2 className="serif text-2xl font-bold mb-1">{item.title}</h2>
-            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                {item.company} — {item.location}
-            </p>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-                {item.description}
-            </p>
+            <h1 className="serif text-4xl font-bold mb-2 text-[var(--text-primary)]">{title}</h1>
 
-            {item.highlights && item.highlights.length > 0 && (
-                <div className="mb-6">
-                    <h3 className="mono text-xs tracking-widest uppercase mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                        Key Highlights
-                    </h3>
-                    <ul className="space-y-2">
-                        {item.highlights.map((h) => (
-                            <li key={h} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                                <span style={{ color: 'var(--pastel-sage-deep)' }}>▸</span>
-                                {h}
-                            </li>
-                        ))}
-                    </ul>
+            {subtitle && (
+                <p className="text-lg mb-8" style={{ color: 'var(--text-secondary)' }}>
+                    {subtitle}
+                </p>
+            )}
+
+            <div className="h-px w-full bg-[var(--cream-300)] mb-8" />
+
+            <div className="text-base leading-relaxed text-[var(--text-secondary)] mb-12 space-y-6">
+                {children}
+            </div>
+
+            {tags && tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-6 border-t border-[var(--cream-300)]">
+                    {tags.map((tag: string) => (
+                        <span key={tag} className="tag">{tag}</span>
+                    ))}
                 </div>
             )}
-
-            <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'var(--cream-300)' }}>
-                {item.tags.map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
-                ))}
-            </div>
-        </div>
-    );
-}
-
-function BlogDetailView({ item }: { item: BlogPost }) {
-    return (
-        <div>
-            <p className="mono text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-                {item.date}
-            </p>
-            <h2 className="serif text-2xl font-bold mb-4">{item.title}</h2>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                {item.excerpt}
-            </p>
-            <div className="mt-6 pt-4 border-t" style={{ borderColor: 'var(--cream-300)' }}>
-                <a
-                    href={item.link}
-                    className="link-hover mono text-xs tracking-widest uppercase"
-                    style={{ color: 'var(--text-tertiary)' }}
-                >
-                    Read full post →
-                </a>
-            </div>
-        </div>
-    );
-}
-
-function ReadingDetailView({ item }: { item: RecommendedReading }) {
-    return (
-        <div>
-            <p className="mono text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-                Recommended
-            </p>
-            <h2 className="serif text-2xl font-bold mb-1">{item.title}</h2>
-            <p className="text-xs italic mb-4" style={{ color: 'var(--text-tertiary)' }}>
-                by {item.author}
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                {item.description}
-            </p>
-        </div>
-    );
-}
-
-function ProjectDetailView({ item }: { item: Project }) {
-    return (
-        <div>
-            <p className="mono text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-                Project
-            </p>
-            <h2 className="serif text-2xl font-bold mb-4">{item.title}</h2>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-                {item.description}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4">
-                {item.tags.map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
-                ))}
-            </div>
-            {item.link && (
-                <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link-hover mono text-xs tracking-widest uppercase"
-                    style={{ color: 'var(--text-tertiary)' }}
-                >
-                    View on GitHub →
-                </a>
-            )}
-        </div>
-    );
-}
-
-function ResearchDetailView({ item }: { item: ResearchExperience }) {
-    return (
-        <div>
-            <p className="mono text-[10px] tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-                {item.period}
-            </p>
-            <h2 className="serif text-2xl font-bold mb-1">{item.title}</h2>
-            <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                {item.institution} — {item.location}
-            </p>
-            <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-                {item.description}
-            </p>
-            <div className="flex flex-wrap gap-2 pt-4 border-t" style={{ borderColor: 'var(--cream-300)' }}>
-                {item.tags.map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
-                ))}
-            </div>
         </div>
     );
 }
@@ -164,13 +52,6 @@ interface StackedColumnsProps {
     recommendedReading: RecommendedReading[];
 }
 
-type DetailItem =
-    | { type: 'work'; item: WorkExperience }
-    | { type: 'blog'; item: BlogPost }
-    | { type: 'reading'; item: RecommendedReading }
-    | { type: 'project'; item: Project }
-    | { type: 'research'; item: ResearchExperience };
-
 export default function StackedColumns({
     workExperience,
     researchExperience,
@@ -178,160 +59,267 @@ export default function StackedColumns({
     blog,
     recommendedReading,
 }: StackedColumnsProps) {
-    const [activeDetail, setActiveDetail] = useState<DetailItem | null>(null);
 
-    const renderDetail = () => {
-        if (!activeDetail) return null;
-        switch (activeDetail.type) {
-            case 'work': return <WorkDetailView item={activeDetail.item} />;
-            case 'blog': return <BlogDetailView item={activeDetail.item} />;
-            case 'reading': return <ReadingDetailView item={activeDetail.item} />;
-            case 'project': return <ProjectDetailView item={activeDetail.item} />;
-            case 'research': return <ResearchDetailView item={activeDetail.item} />;
-        }
+    // --- Tab Opening Handlers ---
+
+    const openResearchTab = (item: ResearchExperience) => {
+        dispatchOpenTab({
+            id: `research-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
+            title: item.title,
+            type: 'detail',
+            icon: <span className="text-xs">🔬</span>,
+            content: (
+                <DetailLayout
+                    title={item.title}
+                    subtitle={`${item.institution} — ${item.location}`}
+                    meta={item.period}
+                    tags={item.tags}
+                >
+                    <p>{item.description}</p>
+                </DetailLayout>
+            )
+        });
     };
 
-    const getDetailTitle = () => {
-        if (!activeDetail) return '';
-        switch (activeDetail.type) {
-            case 'work': return `${activeDetail.item.company} — ${activeDetail.item.title}`;
-            case 'blog': return activeDetail.item.title;
-            case 'reading': return activeDetail.item.title;
-            case 'project': return activeDetail.item.title;
-            case 'research': return `${activeDetail.item.institution} — ${activeDetail.item.title}`;
-        }
+    const openWorkTab = (item: WorkExperience) => {
+        dispatchOpenTab({
+            id: `work-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
+            title: item.title,
+            type: 'detail',
+            icon: <span className="text-xs">💼</span>,
+            content: (
+                <DetailLayout
+                    title={item.title}
+                    subtitle={`${item.company} — ${item.location}`}
+                    meta={item.period}
+                    tags={item.tags}
+                >
+                    <p className="mb-6">{item.description}</p>
+                    {item.highlights && (
+                        <div className="bg-[var(--cream-100)] p-6 rounded-xl border border-[var(--cream-300)]">
+                            <h4 className="mono text-xs uppercase tracking-widest text-[var(--text-tertiary)] mb-4">Key Responsibilities</h4>
+                            <ul className="space-y-3">
+                                {item.highlights.map(h => (
+                                    <li key={h} className="flex gap-3 text-sm">
+                                        <span className="text-[var(--pastel-sage-deep)]">▸</span>
+                                        {h}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </DetailLayout>
+            )
+        });
+    };
+
+    const openProjectTab = (item: Project) => {
+        dispatchOpenTab({
+            id: `project-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
+            title: item.title,
+            type: 'detail',
+            icon: <span className="text-xs">🚀</span>,
+            content: (
+                <DetailLayout
+                    title={item.title}
+                    meta="Project"
+                    tags={item.tags}
+                >
+                    <p>{item.description}</p>
+                    {item.link && (
+                        <div className="mt-8">
+                            <a
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:underline"
+                            >
+                                View Project Source →
+                            </a>
+                        </div>
+                    )}
+                </DetailLayout>
+            )
+        });
+    };
+
+    const openBlogTab = (item: BlogPost) => {
+        dispatchOpenTab({
+            id: `blog-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
+            title: item.title,
+            type: 'detail',
+            icon: <span className="text-xs">✍️</span>,
+            content: (
+                <DetailLayout
+                    title={item.title}
+                    meta={item.date}
+                >
+                    <p className="text-lg italic text-[var(--text-secondary)] border-l-4 border-[var(--cream-300)] pl-4 mb-8">
+                        {item.excerpt}
+                    </p>
+                    <p>
+                        (Full blog post content would go here. For now, linking to external source...)
+                    </p>
+                    <div className="mt-8">
+                        <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-primary"
+                            style={{
+                                padding: '10px 20px',
+                                background: 'var(--text-primary)',
+                                color: 'white',
+                                borderRadius: '99px',
+                                textDecoration: 'none',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            Read on Substack
+                        </a>
+                    </div>
+                </DetailLayout>
+            )
+        });
+    };
+
+    const openReadingTab = (item: RecommendedReading) => {
+        dispatchOpenTab({
+            id: `reading-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
+            title: item.title,
+            type: 'detail',
+            icon: <span className="text-xs">📚</span>,
+            content: (
+                <DetailLayout
+                    title={item.title}
+                    subtitle={`by ${item.author}`}
+                    meta="Recommended Reading"
+                >
+                    <p>{item.description}</p>
+                </DetailLayout>
+            )
+        });
     };
 
     return (
-        <>
-            <section className="section-block" id="experience">
-                <div className="three-columns">
-                    {/* --- Column 1: Experience (Research + Work) --- */}
-                    <div>
-                        <p className="column-header">Experience</p>
+        <section className="section-block" id="experience">
+            <div className="three-columns">
+                {/* --- Column 1: Experience (Research + Work + Projects) --- */}
+                <div>
+                    <p className="column-header">Experience & Projects</p>
 
-                        {/* Research */}
-                        {researchExperience.map((item, i) => (
-                            <motion.div
-                                key={`research-${item.title}`}
-                                className={`sticky-card ${CARD_COLORS[i % CARD_COLORS.length]}`}
-                                onClick={() => setActiveDetail({ type: 'research', item })}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1, duration: 0.4 }}
-                                style={{ zIndex: researchExperience.length - i }}
-                            >
-                                <p className="mono text-[9px] tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
-                                    {item.period}
-                                </p>
-                                <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
-                                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{item.institution}</p>
-                            </motion.div>
-                        ))}
+                    {/* Research */}
+                    {researchExperience.map((item, i) => (
+                        <motion.div
+                            key={`research-${item.title}`}
+                            className={`sticky-card ${CARD_COLORS[i % CARD_COLORS.length]}`}
+                            onClick={() => openResearchTab(item)}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.4 }}
+                            style={{ zIndex: 50 - i }}
+                        >
+                            <p className="mono text-[9px] tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
+                                {item.period}
+                            </p>
+                            <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
+                            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{item.institution}</p>
+                        </motion.div>
+                    ))}
 
-                        {/* Work Experience */}
-                        {workExperience.map((item, i) => (
-                            <motion.div
-                                key={`work-${item.title}`}
-                                className={`sticky-card ${CARD_COLORS[(i + 2) % CARD_COLORS.length]}`}
-                                onClick={() => setActiveDetail({ type: 'work', item })}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: (i + researchExperience.length) * 0.1, duration: 0.4 }}
-                                style={{ zIndex: workExperience.length - i }}
-                            >
-                                <p className="mono text-[9px] tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
-                                    {item.period}
-                                </p>
-                                <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
-                                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{item.company}</p>
-                            </motion.div>
-                        ))}
+                    {/* Work */}
+                    {workExperience.map((item, i) => (
+                        <motion.div
+                            key={`work-${item.title}`}
+                            className={`sticky-card ${CARD_COLORS[(i + 2) % CARD_COLORS.length]}`}
+                            onClick={() => openWorkTab(item)}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: (i + researchExperience.length) * 0.1, duration: 0.4 }}
+                            style={{ zIndex: 40 - i }}
+                        >
+                            <p className="mono text-[9px] tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
+                                {item.period}
+                            </p>
+                            <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
+                            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{item.company}</p>
+                        </motion.div>
+                    ))}
 
-                        {/* Projects */}
-                        <p className="column-header mt-6">Projects</p>
-                        {projects.map((item, i) => (
-                            <motion.div
-                                key={`project-${item.title}`}
-                                className={`sticky-card ${CARD_COLORS[(i + 4) % CARD_COLORS.length]}`}
-                                onClick={() => setActiveDetail({ type: 'project', item })}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1, duration: 0.4 }}
-                                style={{ zIndex: projects.length - i }}
-                            >
-                                <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                    {item.tags.slice(0, 3).map((tag) => (
-                                        <span key={tag} className="tag" style={{ fontSize: '0.55rem' }}>{tag}</span>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-
-                    {/* --- Column 2: Blog --- */}
-                    <div>
-                        <p className="column-header">Blog</p>
-
-                        {blog.map((item, i) => (
-                            <motion.div
-                                key={`blog-${item.title}`}
-                                className={`sticky-card ${CARD_COLORS[(i + 1) % CARD_COLORS.length]}`}
-                                onClick={() => setActiveDetail({ type: 'blog', item })}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 + 0.15, duration: 0.4 }}
-                                style={{ zIndex: blog.length - i }}
-                            >
-                                <p className="mono text-[9px] tracking-widest mb-1" style={{ color: 'var(--text-tertiary)' }}>
-                                    {item.date}
-                                </p>
-                                <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
-                                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                                    {item.excerpt.length > 100 ? item.excerpt.substring(0, 100) + '…' : item.excerpt}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </div>
-
-                    {/* --- Column 3: Recommended Reading --- */}
-                    <div>
-                        <p className="column-header">Reading</p>
-
-                        {recommendedReading.map((item, i) => (
-                            <motion.div
-                                key={`reading-${item.title}`}
-                                className={`sticky-card ${CARD_COLORS[(i + 3) % CARD_COLORS.length]}`}
-                                onClick={() => setActiveDetail({ type: 'reading', item })}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 + 0.3, duration: 0.4 }}
-                                style={{ zIndex: recommendedReading.length - i }}
-                            >
-                                <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
-                                <p className="text-xs italic" style={{ color: 'var(--text-tertiary)' }}>
-                                    {item.author}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </div>
+                    {/* Projects Header inside same column to save space if needed, or keep separate */}
+                    <p className="column-header mt-8">Projects</p>
+                    {projects.map((item, i) => (
+                        <motion.div
+                            key={`project-${item.title}`}
+                            className={`sticky-card ${CARD_COLORS[(i + 4) % CARD_COLORS.length]}`}
+                            onClick={() => openProjectTab(item)}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.4 }}
+                            style={{ zIndex: 30 - i }}
+                        >
+                            <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                                {item.tags.slice(0, 3).map((tag) => (
+                                    <span key={tag} className="tag" style={{ fontSize: '0.55rem' }}>{tag}</span>
+                                ))}
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
-            </section>
 
-            {/* Browser Tab Detail View */}
-            <ColumnModal
-                isOpen={!!activeDetail}
-                onClose={() => setActiveDetail(null)}
-                title={getDetailTitle()}
-            >
-                {renderDetail()}
-            </ColumnModal>
-        </>
+                {/* --- Column 2: Blog --- */}
+                <div>
+                    <p className="column-header">Blog</p>
+
+                    {blog.map((item, i) => (
+                        <motion.div
+                            key={`blog-${item.title}`}
+                            className={`sticky-card ${CARD_COLORS[(i + 1) % CARD_COLORS.length]}`}
+                            onClick={() => openBlogTab(item)}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 + 0.15, duration: 0.4 }}
+                            style={{ zIndex: blog.length - i }}
+                        >
+                            <p className="mono text-[9px] tracking-widest mb-1" style={{ color: 'var(--text-tertiary)' }}>
+                                {item.date}
+                            </p>
+                            <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
+                            <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                                {item.excerpt.length > 100 ? item.excerpt.substring(0, 100) + '…' : item.excerpt}
+                            </p>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* --- Column 3: Recommended Reading --- */}
+                <div>
+                    <p className="column-header">Reading</p>
+
+                    {recommendedReading.map((item, i) => (
+                        <motion.div
+                            key={`reading-${item.title}`}
+                            className={`sticky-card ${CARD_COLORS[(i + 3) % CARD_COLORS.length]}`}
+                            onClick={() => openReadingTab(item)}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1 + 0.3, duration: 0.4 }}
+                            style={{ zIndex: recommendedReading.length - i }}
+                        >
+                            <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
+                            <p className="text-xs italic" style={{ color: 'var(--text-tertiary)' }}>
+                                {item.author}
+                            </p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
     );
 }
