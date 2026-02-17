@@ -2,10 +2,10 @@
 name: "Sameer Kashyap"
 tagline: "I am graudate student at UC Santa Cruz researching AI systems. My research interesrs are in Sciencitic Computing and modelling, AI Safety and fairness, and Agentic AI systems. I preivously worked as SDE-II full stack mobile engineer and love building rich user experiences."
 location: "San Francisco / Santa Cruz, California"
-email: "sameer@example.com"
-github: "https://github.com/sameerkashyap"
-linkedin: "https://linkedin.com/in/sameerkashyap"
-twitter: "https://twitter.com/sameerkashyap"
+email: "ssudars1@ucsc.edu"
+github: "https://github.com/sameeerkashyap"
+linkedin: "https://www.linkedin.com/in/sameer-kashyap-083a89184/"
+twitter: "https://twitter.com/sameeerkashyap"
 scholar: "https://scholar.google.com/citations?user=sameerkashyap"
 
 education:
@@ -150,7 +150,7 @@ projects:
       - LLM
       - LangChain
       - LangGraph
-    link: "https://github.com/sameerkashyap/assembly-agents"
+    link: "https://github.com/sameeerkashyap/assembly-agents"
 
   - title: "Molecular Frames"
     description: "High-performing React frontend for interactive molecular dynamics visualization of complex proteins with WebGPU and Three.js. WebGPU-accelerated rendering boosted FPS by 2.5x for 10k+ atom structures."
@@ -159,7 +159,7 @@ projects:
       - Three.js
       - WebGPU
       - Molecular Dynamics
-    link: "https://github.com/sameerkashyap/molecular-frames"
+    link: "https://github.com/sameeerkashyap/molframes"
 
   - title: "Fine-Tuning Llama 3.0"
     description: "Leveraged LLMs to clean OCR outputs, fine-tuned on CORD v2 to extract menu items, quantities, and prices. Built unified high-performance inference server for production-ready LLMs using Nest.js."
@@ -168,7 +168,7 @@ projects:
       - Transformers
       - Python
       - NestJS
-    link: "https://github.com/sameerkashyap/llama-finetune"
+    link: "https://github.com/sameeerkashyap/scalable-llama"
 
   - title: "CTD-FusionNet Deepfake Detection"
     description: "Designed multi-branch deepfake detection model fusing RGB, noise residuals, and transformer features. Achieved 99.4% AUC, 96.4% accuracy, and 0.961 F1-score."
@@ -177,7 +177,7 @@ projects:
       - PyTorch
       - Computer Vision
       - Attention
-    link: "https://github.com/sameerkashyap/ctd-fusionnet"
+    link: "https://github.com/sameeerkashyap/ctd-fusionnet-deepfake-detection"
 
 blog:
   - title: "Why WebGPU Changes Everything for Scientific Visualization"
@@ -185,28 +185,46 @@ blog:
     excerpt: "A deep dive into how WebGPU's compute shaders unlock real-time scientific visualization in the browser, with benchmarks against WebGL."
     link: "/blog/webgpu-scientific-viz"
 
-  - title: "Parsing Protein Data Bank Files in TypeScript"
-    date: "2024-12-20"
-    excerpt: "Step-by-step guide to parsing PDB files, handling ATOM records, and converting to JSON for 3D rendering."
-    link: "/blog/pdb-parsing-typescript"
-
-  - title: "From O(n²) to O(n log n) — N-body Simulation Optimization"
-    date: "2024-11-05"
-    excerpt: "How I optimized n-body calculations from naive O(n²) to Barnes-Hut tree algorithms."
-    link: "/blog/nbody-optimization"
-
 recommendedReading:
-  - title: "Red Mars"
-    author: "Kim Stanley Robinson"
-    description: "The definitive science fiction on Mars terraforming. Essential reading for anyone thinking about planetary engineering."
+  - title: "Project Hail Mary"
+    author: "Andy Weir"
+    description: "A lone astronaut must save the earth from disaster in this gripping interstellar adventure."
+    link: "https://www.amazon.com/Project-Hail-Mary-Andy-Weir/dp/0593135202"
 
-  - title: "Deep Learning for the Life Sciences"
-    author: "Bharath Ramsundar et al."
-    description: "Practical guide to applying deep learning to drug discovery, genomics, and microscopy."
+  - title: "The Almanack of Naval Ravikant"
+    author: "Eric Jorgenson"
+    description: "A guide to wealth and happiness, collecting the wisdom of Naval Ravikant."
+    link: "https://www.amazon.com/Almanack-Naval-Ravikant-Wealth-Happiness/dp/1544514212"
 
-  - title: "The Feynman Lectures on Physics"
-    author: "Richard Feynman"
-    description: "Timeless. Every physicist and computational scientist should revisit these regularly."
+  - title: "The Psychology of Money"
+    author: "Morgan Housel"
+    description: "Timeless lessons on wealth, greed, and happiness doing well with money."
+    link: "https://www.amazon.com/Psychology-Money-Timeless-lessons-happiness/dp/0857197681"
+
+  - title: "The Future of Humanity"
+    author: "Michio Kaku"
+    description: "Exploring our future in space, from terraforming Mars to interstellar travel."
+    link: "https://www.amazon.com/Future-Humanity-Terraforming-Interstellar-Immortality/dp/0525589539"
+
+  - title: "Thirty Years That Shook Physics"
+    author: "George Gamow"
+    description: "The story of quantum theory, capturing the great intellectual revolution of the 20th century."
+    link: "https://www.amazon.com/Thirty-Years-Physics-Dover-Books/dp/048624895X"
+
+  - title: "Dark Matter"
+    author: "Blake Crouch"
+    description: "A mind-bending thriller about choices, paths not taken, and how far we'll go to claim the lives we dream of."
+    link: "https://www.amazon.com/Dark-Matter-Novel-Blake-Crouch/dp/1101904224"
+
+  - title: "Thinking, Fast and Slow"
+    author: "Daniel Kahneman"
+    description: "The definitive exploration of the two systems that drive the way we think."
+    link: "https://www.amazon.com/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374533555"
+
+  - title: "Elon Musk"
+    author: "Ashlee Vance"
+    description: "Tesla, SpaceX, and the Quest for a Fantastic Future."
+    link: "https://www.amazon.com/Elon-Musk-SpaceX-Fantastic-Future/dp/0062301233"
 
 personalInterests:
   - "PADI Advanced Open Water Diver"
@@ -217,6 +235,8 @@ personalInterests:
   - "Love Cooking"
 
 personalImages:
+  - src: "/images/personal/0.jpg"
+    alt: "Golden Gate Bridge"
   - src: "/images/personal/1.png"
     alt: "Diving in Netrani"
   - src: "/images/personal/4.jpg"

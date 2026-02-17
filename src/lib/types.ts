@@ -68,6 +68,7 @@ export interface RecommendedReading {
     title: string;
     author: string;
     description: string;
+    link?: string;
 }
 
 export interface PersonalImage {

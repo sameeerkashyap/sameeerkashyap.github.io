@@ -195,7 +195,20 @@ export default function StackedColumns({
                     subtitle={`by ${item.author}`}
                     meta="Recommended Reading"
                 >
-                    <p>{item.description}</p>
+                    <p className="mb-6">{item.description}</p>
+                    {item.link && (
+                        <div className="mt-8">
+                            <a
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:underline"
+                            >
+                                <span className="text-xs">📚</span>
+                                Get it on Amazon →
+                            </a>
+                        </div>
+                    )}
                 </DetailLayout>
             )
         });
@@ -206,19 +219,23 @@ export default function StackedColumns({
             <div className="three-columns">
                 {/* --- Column 1: Experience (Research + Work + Projects) --- */}
                 <div>
-                    <p className="column-header">Experience & Projects</p>
+                    <p className="column-header">Experience</p>
 
                     {/* Research */}
                     {researchExperience.map((item, i) => (
                         <motion.div
                             key={`research-${item.title}`}
-                            className={`sticky-card ${CARD_COLORS[i % CARD_COLORS.length]}`}
+                            className="sticky-card"
                             onClick={() => openResearchTab(item)}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1, duration: 0.4 }}
-                            style={{ zIndex: 50 - i }}
+                            style={{
+                                zIndex: 50 - i,
+                                border: '2px solid white',
+                                backgroundColor: `color-mix(in srgb, var(--pastel-sage), var(--cream-100) ${i * 11}%)`
+                            }}
                         >
                             <p className="mono text-[9px] tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
                                 {item.period}
@@ -232,13 +249,17 @@ export default function StackedColumns({
                     {workExperience.map((item, i) => (
                         <motion.div
                             key={`work-${item.title}`}
-                            className={`sticky-card ${CARD_COLORS[(i + 2) % CARD_COLORS.length]}`}
+                            className="sticky-card"
                             onClick={() => openWorkTab(item)}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: (i + researchExperience.length) * 0.1, duration: 0.4 }}
-                            style={{ zIndex: 40 - i }}
+                            style={{
+                                zIndex: 40 - i,
+                                border: '2px solid white',
+                                backgroundColor: `color-mix(in srgb, var(--pastel-sky), var(--cream-100) ${i * 15}%)`
+                            }}
                         >
                             <p className="mono text-[9px] tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
                                 {item.period}
@@ -249,17 +270,21 @@ export default function StackedColumns({
                     ))}
 
                     {/* Projects Header inside same column to save space if needed, or keep separate */}
-                    <p className="column-header mt-8">Projects</p>
+                    <p className="column-header mt-8">New Ideas</p>
                     {projects.map((item, i) => (
                         <motion.div
                             key={`project-${item.title}`}
-                            className={`sticky-card ${CARD_COLORS[(i + 4) % CARD_COLORS.length]}`}
+                            className="sticky-card"
                             onClick={() => openProjectTab(item)}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1, duration: 0.4 }}
-                            style={{ zIndex: 30 - i }}
+                            style={{
+                                zIndex: 30 - i,
+                                border: '2px solid white',
+                                backgroundColor: `color-mix(in srgb, var(--pastel-lavender), var(--cream-100) ${i * 15}%)`
+                            }}
                         >
                             <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
                             <div className="flex flex-wrap gap-1 mt-1">
@@ -273,18 +298,22 @@ export default function StackedColumns({
 
                 {/* --- Column 2: Blog --- */}
                 <div>
-                    <p className="column-header">Blog</p>
+                    <p className="column-header">Some of my thoughts</p>
 
                     {blog.map((item, i) => (
                         <motion.div
                             key={`blog-${item.title}`}
-                            className={`sticky-card ${CARD_COLORS[(i + 1) % CARD_COLORS.length]}`}
+                            className="sticky-card"
                             onClick={() => openBlogTab(item)}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 + 0.15, duration: 0.4 }}
-                            style={{ zIndex: blog.length - i }}
+                            style={{
+                                zIndex: blog.length - i,
+                                border: '2px solid white',
+                                backgroundColor: `color-mix(in srgb, var(--pastel-butter), var(--cream-100) ${i * 15}%)`
+                            }}
                         >
                             <p className="mono text-[9px] tracking-widest mb-1" style={{ color: 'var(--text-tertiary)' }}>
                                 {item.date}
@@ -299,18 +328,22 @@ export default function StackedColumns({
 
                 {/* --- Column 3: Recommended Reading --- */}
                 <div>
-                    <p className="column-header">Reading</p>
+                    <p className="column-header">Reading - Recommend these!</p>
 
                     {recommendedReading.map((item, i) => (
                         <motion.div
                             key={`reading-${item.title}`}
-                            className={`sticky-card ${CARD_COLORS[(i + 3) % CARD_COLORS.length]}`}
+                            className="sticky-card"
                             onClick={() => openReadingTab(item)}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 + 0.3, duration: 0.4 }}
-                            style={{ zIndex: recommendedReading.length - i }}
+                            style={{
+                                zIndex: recommendedReading.length - i,
+                                border: '2px solid white',
+                                backgroundColor: `color-mix(in srgb, var(--pastel-peach), var(--cream-100) ${i * 15}%)`
+                            }}
                         >
                             <h4 className="font-semibold text-sm mb-0.5">{item.title}</h4>
                             <p className="text-xs italic" style={{ color: 'var(--text-tertiary)' }}>
