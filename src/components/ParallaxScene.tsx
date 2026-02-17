@@ -22,8 +22,8 @@ const sunUrl = '/models/sun.glb';
 // --- ATOM GROUP (Right Side, Small, Equation on Nucleus) ---
 function AtomGroup({ progress }: { progress: number }) {
     const ref = useRef<THREE.Group>(null);
-    const material = useMemo(() => new THREE.MeshBasicMaterial({ color: '#777', side: THREE.DoubleSide }), []);
-    const nucleusMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#333', roughness: 0.3 }), []);
+    const material = useMemo(() => new THREE.MeshBasicMaterial({ color: '#9b9b9bff', side: THREE.DoubleSide }), []);
+    const nucleusMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#aaa0a0ff', roughness: 0.3 }), []);
 
     useFrame(() => {
         // Fade out as Sun appears (0.25)
@@ -37,12 +37,13 @@ function AtomGroup({ progress }: { progress: number }) {
 
     return (
         // Positioned on Right Side (x=2.5) for Phase 0
-        <group ref={ref} position={[2.5, 0, 0]}>
+        <group ref={ref} position={[3, 0, 0]}>
             {/* Nucleus */}
-            <Sphere args={[0.4, 32, 32]} material={nucleusMat}>
+            <Sphere args={[0.5, 0, 32]} material={nucleusMat}>
                 {/* Equation Centered on Nucleus */}
+
                 <Html position={[0, 0, 0]} center transform style={{ pointerEvents: 'none' }}>
-                    <div className="font-serif text-white text-[8px] font-bold tracking-widest opacity-90 whitespace-nowrap">
+                    <div className="font-serif text-white text-[4px] font-bold tracking-widest opacity-70 whitespace-nowrap">
                         iℏ∂ψ/∂t=Ĥψ
                     </div>
                 </Html>
@@ -51,22 +52,21 @@ function AtomGroup({ progress }: { progress: number }) {
             {/* Ring 1: 2 Electrons */}
             <group rotation={[Math.PI / 3, 0, 0]}>
                 <mesh>
-                    <torusGeometry args={[1.8, 0.015, 16, 100]} />
+                    <ringGeometry args={[1.785, 1.815, 64]} />
                     <primitive object={material} />
                 </mesh>
-                <Selectron angleOffset={0} radius={1.8} speed={2} />
-                <Selectron angleOffset={Math.PI} radius={1.8} speed={2} />
+                <Selectron angleOffset={0} radius={1.8} speed={0.5} />
+                <Selectron angleOffset={Math.PI} radius={1.8} speed={0.7} />
             </group>
 
             {/* Ring 2: 1 Electron */}
-            <group rotation={[-Math.PI / 3, 0, 0]}>
+            <group rotation={[-Math.PI / 8, 0, 0]}>
                 <mesh>
-                    <torusGeometry args={[1.8, 0.015, 16, 100]} />
+                    <ringGeometry args={[1.785, 1.815, 64]} />
                     <primitive object={material} />
                 </mesh>
-                <Selectron angleOffset={1} radius={1.8} speed={2.5} />
+                <Selectron angleOffset={1} radius={1.8} speed={0.8} />
             </group>
-
         </group>
     );
 }
@@ -82,8 +82,8 @@ function Selectron({ radius, speed, angleOffset }: any) {
     });
     return (
         <mesh ref={ref}>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshStandardMaterial color="#888" />
+            <sphereGeometry args={[0.1, 12, 12]} />
+            <meshStandardMaterial color="#beb3b3ff" />
         </mesh>
     );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Github, Linkedin, Twitter, GraduationCap, Mail } from 'lucide-react';
 
 interface SocialSidebarProps {
     github?: string;
@@ -11,11 +12,11 @@ interface SocialSidebarProps {
 }
 
 const links = [
-    { key: 'github', label: 'GH' },
-    { key: 'linkedin', label: 'LI' },
-    { key: 'twitter', label: 'TW' },
-    { key: 'scholar', label: 'GS' },
-    { key: 'email', label: 'EM' },
+    { key: 'github', label: 'GitHub', icon: Github },
+    { key: 'linkedin', label: 'LinkedIn', icon: Linkedin },
+    { key: 'twitter', label: 'Twitter', icon: Twitter },
+    { key: 'scholar', label: 'Google Scholar', icon: GraduationCap },
+    { key: 'email', label: 'Email', icon: Mail },
 ] as const;
 
 export default function SocialSidebar({ github, linkedin, twitter, scholar, email }: SocialSidebarProps) {
@@ -55,7 +56,7 @@ export default function SocialSidebar({ github, linkedin, twitter, scholar, emai
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 1.4 + i * 0.1, duration: 0.4 }}
                 >
-                    {link.label}
+                    <link.icon size={18} strokeWidth={2} />
                 </motion.a>
             ))}
 
