@@ -1,26 +1,562 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --cream-50: #fefdfb;
+    --cream-100: #fcfaf2;
+    --cream-200: #f7f3e7;
+    --cream-300: #efe9d6;
+    --cream-400: #e0d5bc;
+
+    --pastel-sage: #c8d5b9;
+    --pastel-sage-deep: #a3b899;
+    --pastel-sky: #b8d4e3;
+    --pastel-sky-deep: #8fb9d4;
+    --pastel-lavender: #c4b7d4;
+    --pastel-lavender-deep: #a998bf;
+    --pastel-peach: #f0c9b0;
+    --pastel-peach-deep: #e5a880;
+    --pastel-rose: #deb5b5;
+    --pastel-rose-deep: #c99595;
+    --pastel-butter: #e8dba0;
+    --pastel-butter-deep: #d4c47a;
+
+    --mars-rust: #c1440e;
+    --mars-orange: #e77d11;
+    --mars-glow: #ff6b35;
+
+    --text-primary: #2d2a26;
+    --text-secondary: #5a554e;
+    --text-tertiary: #8a8480;
+
+    --max-width: 1200px;
+    --social-bar-width: 48px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--cream-100);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--pastel-sage);
+    color: var(--text-primary);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--cream-200);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--cream-400);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-tertiary);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =========================================================
+   ALL CUSTOM CLASSES — kept OUTSIDE @layer so Tailwind v4
+   does NOT purge them (utilities layer gets tree-shaken,
+   but non-layer rules are always emitted).
+   ========================================================= */
+
+/* Typography helpers */
+.serif {
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ========== HERO SCENE ========== */
+.hero-scene-container {
+  position: relative;
+  width: 100%;
+  height: 300vh;
+}
+
+.hero-canvas-wrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+  padding: 0 clamp(1.5rem, 5vw, 5rem);
+  padding-right: calc(var(--social-bar-width) + 2rem);
+}
+
+.hero-overlay * {
+  pointer-events: auto;
+}
+
+/* ========== SOCIAL SIDEBAR ========== */
+.social-sidebar {
+  position: fixed !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: var(--social-bar-width) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1.25rem !important;
+  z-index: 100 !important;
+  padding: 1rem 0 !important;
+}
+
+.social-sidebar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--text-tertiary);
+  transition: all 0.3s ease;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.social-sidebar a:hover {
+  color: var(--text-primary);
+  background-color: var(--cream-200);
+  transform: scale(1.1);
+}
+
+/* ========== MARS FEATURED SECTION ========== */
+.mars-section {
+  position: relative !important;
+  width: 100% !important;
+  min-height: 60vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+
+.mars-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  background: radial-gradient(circle at 50% 50%, var(--mars-rust) 0%, #1a0a02 100%) !important;
+  z-index: 0 !important;
+}
+
+.mars-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  max-width: 700px;
+  padding: 3rem 2rem;
+}
+
+/* ========== MODAL OVERLAY ========== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-panel {
+  background: var(--cream-50);
+  border-radius: 20px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 2.5rem;
+  position: relative;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--cream-300);
+  background: var(--cream-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--cream-200);
+  color: var(--text-primary);
+}
+
+/* ========== BROWSER TAB VIEW ========== */
+.browser-tab-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 55%;
+  min-width: 500px;
+  max-width: 800px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .browser-tab-overlay {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+.browser-tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--cream-200);
+  border-bottom: 1px solid var(--cream-300);
+  border-top-left-radius: 12px;
+}
+
+.browser-tab-bar .tab-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.browser-tab-bar .tab-dot.red {
+  background: #ff5f57;
+}
+
+.browser-tab-bar .tab-dot.yellow {
+  background: #febc2e;
+}
+
+.browser-tab-bar .tab-dot.green {
+  background: #28c840;
+}
+
+.browser-tab-bar .tab-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.browser-tab-content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--cream-50);
+  padding: 2rem;
+}
+
+.browser-tab-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  z-index: 299;
+}
+
+/* ========== PUBLICATIONS LIST ========== */
+.publication-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--cream-300);
+  transition: background 0.2s;
+}
+
+.publication-item:last-child {
+  border-bottom: none;
+}
+
+.publication-item:hover {
+  background: var(--cream-200);
+  margin: 0 -1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border-bottom-color: transparent;
+}
+
+.pub-icon {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  margin-top: 2px;
+}
+
+/* ========== STACKED COLUMNS ========== */
+.three-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .three-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .three-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--cream-300);
+}
+
+.sticky-card {
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: -0.5rem;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.sticky-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.sticky-card:last-child {
+  margin-bottom: 0;
+}
+
+/* Card colors */
+.card-sage {
+  background-color: var(--pastel-sage);
+}
+
+.card-sky {
+  background-color: var(--pastel-sky);
+}
+
+.card-lavender {
+  background-color: var(--pastel-lavender);
+}
+
+.card-peach {
+  background-color: var(--pastel-peach);
+}
+
+.card-rose {
+  background-color: var(--pastel-rose);
+}
+
+.card-butter {
+  background-color: var(--pastel-butter);
+}
+
+.card-cream {
+  background-color: var(--cream-200);
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(4px);
+}
+
+/* Photo masonry */
+.photo-grid {
+  columns: 3;
+  column-gap: 1rem;
+}
+
+.photo-grid>* {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .photo-grid {
+    columns: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-grid {
+    columns: 1;
+  }
+}
+
+/* Link animation */
+.link-hover {
+  position: relative;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--text-primary);
+  transition: width 0.3s ease;
+}
+
+.link-hover:hover::after {
+  width: 100%;
+}
+
+/* Equation text */
+.equation-text {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: rgba(45, 42, 38, 0.15);
+}
+
+/* Page wrapper for social bar offset */
+.page-content {
+  margin-right: var(--social-bar-width);
+}
+
+/* Section spacing utility */
+.section-block {
+  padding: 4rem clamp(1.5rem, 5vw, 5rem);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+/* Pulse animation for publication icons */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.pub-icon-pulse {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* Fade in up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+/* Mars surface shimmer */
+@keyframes mars-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.mars-shimmer-text {
+  background: linear-gradient(90deg,
+      var(--mars-orange) 0%,
+      #ffd700 25%,
+      var(--mars-glow) 50%,
+      #ffd700 75%,
+      var(--mars-orange) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: mars-shimmer 4s linear infinite;
 }
