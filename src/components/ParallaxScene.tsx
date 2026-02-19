@@ -268,7 +268,7 @@ function Planets({ scrollProgress }: { scrollProgress: number }) {
         { orbit: 2.2, size: 0.06, color: '#b0b0b0', speed: 0.47 },  // Mercury
         { orbit: 3.0, size: 0.09, color: '#e6c35c', speed: 0.35 },  // Venus
         { orbit: 4.0, size: 0.1, color: '#4a90d9', speed: 0.29 },  // Earth
-        { orbit: 7.0, size: 0.4, color: '#d4a96a', speed: 0.13 },  // Jupiter
+        { orbit: 7.0, size: 0.5, color: '#d4a96a', speed: 0.13 },  // Jupiter
         { orbit: 9.0, size: 0.2, color: '#e8d08a', speed: 0.09 },  // Saturn
         { orbit: 11.0, size: 0.13, color: '#7bc8e0', speed: 0.064 }, // Uranus
         { orbit: 13.0, size: 0.12, color: '#4169e1', speed: 0.05 },  // Neptune
@@ -292,15 +292,30 @@ function Planets({ scrollProgress }: { scrollProgress: number }) {
     return (
         <group ref={groupRef} rotation={[Math.PI / 6, 0, 0]}>
             {planets.map((p, i) => (
-                <mesh key={i}>
-                    <sphereGeometry args={[p.size, 16, 16]} />
-                    <meshStandardMaterial
-                        color={p.color}
-                        roughness={0.7}
-                        transparent
-                        opacity={appear * fade}
-                    />
-                </mesh>
+                <group key={i}>
+                    <mesh>
+                        <sphereGeometry args={[p.size, 16, 16]} />
+                        <meshStandardMaterial
+                            color={p.color}
+                            roughness={0.7}
+                            transparent
+                            opacity={appear * fade}
+                        />
+                    </mesh>
+                    {/* Saturn ring */}
+                    {i === 4 && (
+                        <mesh rotation={[Math.PI / 2.5, 0, 0]}>
+                            <ringGeometry args={[p.size * 2.0, p.size * 1.5, 48]} />
+                            <meshStandardMaterial
+                                color="#c4a45a"
+                                side={THREE.DoubleSide}
+                                transparent
+                                opacity={appear * fade * 0.4}
+                                roughness={0.6}
+                            />
+                        </mesh>
+                    )}
+                </group>
             ))}
         </group>
     );
