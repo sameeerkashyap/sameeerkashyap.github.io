@@ -268,8 +268,8 @@ function Planets({ scrollProgress }: { scrollProgress: number }) {
         { orbit: 2.2, size: 0.06, color: '#b0b0b0', speed: 0.47 },  // Mercury
         { orbit: 3.0, size: 0.09, color: '#e6c35c', speed: 0.35 },  // Venus
         { orbit: 4.0, size: 0.1, color: '#4a90d9', speed: 0.29 },  // Earth
-        { orbit: 7.0, size: 0.2, color: '#d4a96a', speed: 0.13 },  // Jupiter
-        { orbit: 9.0, size: 0.18, color: '#e8d08a', speed: 0.09 },  // Saturn
+        { orbit: 7.0, size: 0.4, color: '#d4a96a', speed: 0.13 },  // Jupiter
+        { orbit: 9.0, size: 0.2, color: '#e8d08a', speed: 0.09 },  // Saturn
         { orbit: 11.0, size: 0.13, color: '#7bc8e0', speed: 0.064 }, // Uranus
         { orbit: 13.0, size: 0.12, color: '#4169e1', speed: 0.05 },  // Neptune
     ], []);
@@ -322,14 +322,16 @@ function SunModel({ scrollProgress }: { scrollProgress: number }) {
 
                 // Helper to create glowing yellow material
                 const createSunMat = (original: THREE.Material) => {
+                    const orig = original as THREE.MeshStandardMaterial;
+                    // sun.glb stores its texture in emissiveMap, not map
+                    const tex = orig.map || orig.emissiveMap || null;
                     const newMat = new THREE.MeshBasicMaterial({
-                        color: new THREE.Color("#FDB813"), // Force Yellow
+                        color: new THREE.Color("#FDB813"),
                         transparent: true,
+                        side: THREE.DoubleSide,
+                        depthWrite: false,
                     });
-                    // Preserve texture if exists
-                    if ('map' in original) {
-                        newMat.map = (original as THREE.MeshStandardMaterial).map;
-                    }
+                    if (tex) newMat.map = tex;
                     return newMat;
                 };
 
@@ -346,8 +348,8 @@ function SunModel({ scrollProgress }: { scrollProgress: number }) {
 
     useFrame(() => {
         if (!ref.current) return;
-        // Adjust scale factor if model is too big/small. Starting with 1.8.
-        const s = appear * 1.8;
+        // Native model is ~100 units across; scale down to fit as central star
+        const s = appear * 0.005;
         ref.current.scale.setScalar(s);
         ref.current.rotation.y += 0.002;
 
