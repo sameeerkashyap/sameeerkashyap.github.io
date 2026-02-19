@@ -1,6 +1,6 @@
 ---
 name: "Sameer Kashyap"
-tagline: "I am graudate student at UC Santa Cruz researching AI systems. My research interesrs are in Sciencitic Computing and modelling, AI Safety and fairness, and Agentic AI systems. I preivously worked as SDE-II full stack mobile engineer and love building rich user experiences."
+tagline: "I am graudate student at UC Santa Cruz researching AI systems. My research interests are in Scientific Computing and modelling, AI Safety and fairness, and Agentic AI systems. I previously worked as SDE-II full stack mobile engineer and love building rich user experiences."
 location: "San Francisco / Santa Cruz, California"
 email: "ssudars1@ucsc.edu"
 github: "https://github.com/sameeerkashyap"

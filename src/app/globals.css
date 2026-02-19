@@ -624,3 +624,277 @@
   background-clip: text;
   animation: mars-shimmer 4s linear infinite;
 }
+
+/* ========== README CONTAINER ========== */
+.readme-container {
+  border: 1px solid var(--cream-300);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--cream-50);
+}
+
+.readme-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--cream-100);
+  border-bottom: 1px solid var(--cream-300);
+}
+
+.readme-body {
+  padding: 24px 32px;
+}
+
+@media (max-width: 640px) {
+  .readme-body {
+    padding: 16px;
+  }
+}
+
+.readme-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  gap: 0.5rem;
+}
+
+/* ========== LOADING SKELETON ========== */
+.readme-skeleton {
+  padding: 0.5rem 0;
+}
+
+.skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--cream-200) 25%,
+    var(--cream-300) 50%,
+    var(--cream-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ========== GITHUB-FLAVORED MARKDOWN ========== */
+.github-markdown {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+  word-wrap: break-word;
+}
+
+.github-markdown h1 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--cream-300);
+  color: var(--text-primary);
+}
+
+.github-markdown h2 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin: 1.75rem 0 0.75rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--cream-300);
+  color: var(--text-primary);
+}
+
+.github-markdown h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.github-markdown h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--text-primary);
+}
+
+.github-markdown h5, .github-markdown h6 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: var(--text-secondary);
+}
+
+.github-markdown p {
+  margin: 0 0 1rem;
+}
+
+.github-markdown a {
+  color: var(--pastel-sky-deep);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.github-markdown a:hover {
+  border-bottom-color: var(--pastel-sky-deep);
+}
+
+.github-markdown strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.github-markdown em {
+  font-style: italic;
+}
+
+.github-markdown ul,
+.github-markdown ol {
+  margin: 0 0 1rem;
+  padding-left: 1.75rem;
+}
+
+.github-markdown li {
+  margin: 0.35rem 0;
+}
+
+.github-markdown li > ul,
+.github-markdown li > ol {
+  margin: 0.25rem 0 0;
+}
+
+.github-markdown blockquote {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid var(--pastel-lavender);
+  background: color-mix(in srgb, var(--pastel-lavender), var(--cream-50) 85%);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-secondary);
+}
+
+.github-markdown blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Inline code */
+.github-markdown code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85em;
+  padding: 0.15em 0.4em;
+  border-radius: 5px;
+  background: var(--cream-200);
+  color: var(--text-primary);
+}
+
+/* Code blocks */
+.github-markdown pre {
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow-x: auto;
+  background: #1e1e2e;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.github-markdown pre code {
+  display: block;
+  padding: 1rem 1.25rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  background: transparent;
+  color: #cdd6f4;
+  border-radius: 0;
+}
+
+/* Tables */
+.github-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--cream-300);
+}
+
+.github-markdown thead th {
+  background: var(--cream-200);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 2px solid var(--cream-300);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.github-markdown tbody td {
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid var(--cream-300);
+  vertical-align: top;
+}
+
+.github-markdown tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.github-markdown tbody tr:hover {
+  background: var(--cream-100);
+}
+
+/* Horizontal rule */
+.github-markdown hr {
+  height: 1px;
+  margin: 2rem 0;
+  border: none;
+  background: var(--cream-300);
+}
+
+/* Images inside README */
+.github-markdown img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+  border: 1px solid var(--cream-300);
+}
+
+/* Task lists (checkboxes) */
+.github-markdown input[type="checkbox"] {
+  margin-right: 0.5rem;
+  accent-color: var(--pastel-sage-deep);
+}
+
+/* Definition lists are rare but handle gracefully */
+.github-markdown dl {
+  margin: 1rem 0;
+}
+
+.github-markdown dt {
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+.github-markdown dd {
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Footnotes */
+.github-markdown sup a {
+  font-size: 0.75em;
+  color: var(--pastel-sky-deep);
+}

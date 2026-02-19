@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { WorkExperience, BlogPost, RecommendedReading, Project, ResearchExperience } from '@/lib/types';
 import { dispatchOpenTab } from '@/components/TabSystem';
+import ProjectDetail from '@/components/ProjectDetail';
 
 const CARD_COLORS = ['card-sage', 'card-sky', 'card-lavender', 'card-peach', 'card-rose', 'card-butter'];
 
@@ -119,27 +120,7 @@ export default function StackedColumns({
             title: item.title,
             type: 'detail',
             icon: <span className="text-xs">🚀</span>,
-            content: (
-                <DetailLayout
-                    title={item.title}
-                    meta="Project"
-                    tags={item.tags}
-                >
-                    <p>{item.description}</p>
-                    {item.link && (
-                        <div className="mt-8">
-                            <a
-                                href={item.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:underline"
-                            >
-                                View Project Source →
-                            </a>
-                        </div>
-                    )}
-                </DetailLayout>
-            )
+            content: <ProjectDetail project={item} />
         });
     };
 
