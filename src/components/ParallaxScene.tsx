@@ -25,7 +25,7 @@ function AtomGroup({ progress }: { progress: number }) {
     const { viewport } = useThree();
     const isMobile = viewport.width < 6;
 
-    const material = useMemo(() => new THREE.MeshBasicMaterial({ color: '#9b9b9bff', side: THREE.DoubleSide }), []);
+    const material = useMemo(() => new THREE.MeshBasicMaterial({ color: '#1e1e1eff', side: THREE.DoubleSide }), []);
     const nucleusMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#aaa0a0ff', roughness: 0.3 }), []);
 
     useFrame(() => {
@@ -48,19 +48,19 @@ function AtomGroup({ progress }: { progress: number }) {
 
                 <Html position={[0, 0, 0]} center transform style={{ pointerEvents: 'none' }}>
                     <div className="font-serif text-white text-[4px] font-bold tracking-widest opacity-70 whitespace-nowrap">
-                        iℏ∂ψ/∂t=Ĥψ
+                        Li
                     </div>
                 </Html>
             </Sphere>
 
-            {/* Ring 1: 2 Electrons */}
+            {/* Ring 1: 2 Electrons (staggered teleportation cycles) */}
             <group rotation={[Math.PI / 3, 0, 0]}>
                 <mesh>
                     <ringGeometry args={[1.785, 1.815, 64]} />
                     <primitive object={material} />
                 </mesh>
-                <Selectron angleOffset={0} radius={1.8} speed={0.5} />
-                <Selectron angleOffset={Math.PI} radius={1.8} speed={0.7} />
+                <QuantumElectron angleOffset={0} radius={1.8} speed={0.25} cycleDuration={5} staggerDelay={0} />
+                <QuantumElectron angleOffset={Math.PI} radius={1.8} speed={0.35} cycleDuration={5.5} staggerDelay={1.8} />
             </group>
 
             {/* Ring 2: 1 Electron */}
@@ -69,26 +69,191 @@ function AtomGroup({ progress }: { progress: number }) {
                     <ringGeometry args={[1.785, 1.815, 64]} />
                     <primitive object={material} />
                 </mesh>
-                <Selectron angleOffset={1} radius={1.8} speed={0.8} />
+                <QuantumElectron angleOffset={1} radius={1.8} speed={0.5} cycleDuration={6} staggerDelay={3.2} />
             </group>
         </group>
     );
 }
 
-function Selectron({ radius, speed, angleOffset }: any) {
-    const ref = useRef<THREE.Mesh>(null);
-    useFrame((state) => {
-        if (ref.current) {
-            const t = state.clock.elapsedTime * speed + angleOffset;
-            ref.current.position.x = Math.cos(t) * radius;
-            ref.current.position.y = Math.sin(t) * radius;
+/** Slice data — widths approximate the cross-section of a sphere at each height */
+const SLICE_OFFSETS = [-0.065, -0.032, 0, 0.032, 0.065];
+const SLICE_WIDTHS = [0.12, 0.17, 0.19, 0.17, 0.12]; // narrower at top/bottom
+const SLICE_HEIGHT = 0.018;
+
+/**
+ * QuantumElectron — Electron with scan-line phase-transition teleportation.
+ *
+ * The electron orbits normally then "phase-transitions": the sphere fades
+ * fast while 5 horizontal slices appear and spread apart vertically (like
+ * scan-line interference).  After a brief gap the slices converge at a
+ * new random position on the ring and the electron materialises.
+ */
+function QuantumElectron({ radius, speed, angleOffset, cycleDuration = 5, staggerDelay = 0 }: {
+    radius: number;
+    speed: number;
+    angleOffset: number;
+    cycleDuration?: number;
+    staggerDelay?: number;
+}) {
+    const mainRef = useRef<THREE.Mesh>(null);
+    const sliceRefs = useRef<(THREE.Mesh | null)[]>([]);
+
+    // Persistent state (no re-renders)
+    const state = useRef({
+        currentAngle: angleOffset,
+        targetAngle: angleOffset,
+        phase: 'orbit' as 'orbit' | 'phaseOut' | 'gap' | 'phaseIn' | 'resume',
+        originX: Math.cos(angleOffset) * radius,
+        originY: Math.sin(angleOffset) * radius,
+        destX: 0,
+        destY: 0,
+    });
+
+    // Phase fractions
+    const ORBIT = 0.52;
+    const PHASE_OUT = 0.14;  // slices spread apart
+    const GAP = 0.08;  // nothing visible
+    const PHASE_IN = 0.14;  // slices converge at destination
+    // remaining 0.12 = resume orbit
+
+    useFrame((clock) => {
+        if (!mainRef.current) return;
+        const t = clock.clock.elapsedTime;
+        const s = state.current;
+
+        const cycleTime = ((t - staggerDelay) % cycleDuration + cycleDuration) % cycleDuration;
+        const frac = cycleTime / cycleDuration;
+
+        const phaseOutStart = ORBIT;
+        const gapStart = ORBIT + PHASE_OUT;
+        const phaseInStart = ORBIT + PHASE_OUT + GAP;
+        const phaseInEnd = ORBIT + PHASE_OUT + GAP + PHASE_IN;
+
+        /* ── ORBIT ──────────────────────────────────────────── */
+        if (frac < phaseOutStart) {
+            s.phase = 'orbit';
+            s.currentAngle += speed * 0.016;
+            const px = Math.cos(s.currentAngle) * radius;
+            const py = Math.sin(s.currentAngle) * radius;
+            mainRef.current.position.set(px, py, 0);
+            mainRef.current.visible = true;
+            (mainRef.current.material as THREE.MeshStandardMaterial).opacity = 1;
+
+            // Hide all slices
+            sliceRefs.current.forEach(m => { if (m) m.visible = false; });
+
+            /* ── PHASE-OUT (sphere fades, slices split apart) ───── */
+        } else if (frac < gapStart) {
+            if (s.phase !== 'phaseOut') {
+                s.phase = 'phaseOut';
+                s.originX = Math.cos(s.currentAngle) * radius;
+                s.originY = Math.sin(s.currentAngle) * radius;
+                // Pick destination (90°–270° away)
+                const jumpOffset = (Math.random() * Math.PI * 1.5) + (Math.PI / 2);
+                const dir = Math.random() > 0.5 ? 1 : -1;
+                s.targetAngle = s.currentAngle + jumpOffset * dir;
+                s.destX = Math.cos(s.targetAngle) * radius;
+                s.destY = Math.sin(s.targetAngle) * radius;
+            }
+
+            const localT = (frac - phaseOutStart) / PHASE_OUT; // 0 → 1
+
+            // Main sphere fades out fast
+            mainRef.current.position.set(s.originX, s.originY, 0);
+            mainRef.current.visible = true;
+            (mainRef.current.material as THREE.MeshStandardMaterial).opacity = Math.max(0, 1 - localT * 3);
+
+            // Slices: appear → spread apart vertically → fade
+            const spread = localT * localT * 0.2;       // how far slices drift (ease-in spread)
+            const sliceOpacity = Math.max(0, 1 - localT * 1.3); // fade out through transition
+            sliceRefs.current.forEach((m, i) => {
+                if (!m) return;
+                m.visible = true;
+                const baseY = SLICE_OFFSETS[i];
+                m.position.set(
+                    s.originX,
+                    s.originY + baseY + baseY * spread / 0.065, // spread proportional to distance from center
+                    0,
+                );
+                (m.material as THREE.MeshStandardMaterial).opacity = sliceOpacity;
+            });
+
+            /* ── GAP (nothing visible) ──────────────────────────── */
+        } else if (frac < phaseInStart) {
+            s.phase = 'gap';
+            mainRef.current.visible = false;
+            sliceRefs.current.forEach(m => { if (m) m.visible = false; });
+
+            /* ── PHASE-IN (slices converge at destination → sphere) */
+        } else if (frac < phaseInEnd) {
+            if (s.phase !== 'phaseIn') {
+                s.phase = 'phaseIn';
+                s.currentAngle = s.targetAngle;
+            }
+
+            const localT = (frac - phaseInStart) / PHASE_IN; // 0 → 1
+
+            // Main sphere fades in late
+            mainRef.current.position.set(s.destX, s.destY, 0);
+            mainRef.current.visible = true;
+            const sphereFade = Math.max(0, (localT - 0.6) * 2.5); // only visible in last 40%
+            (mainRef.current.material as THREE.MeshStandardMaterial).opacity = sphereFade;
+
+            // Slices converge inward → fade as sphere solidifies
+            const spread = (1 - localT) * (1 - localT) * 0.2; // starts spread, converges to 0
+            const sliceOpacity = Math.max(0, (1 - localT) * 1.2);
+            sliceRefs.current.forEach((m, i) => {
+                if (!m) return;
+                m.visible = true;
+                const baseY = SLICE_OFFSETS[i];
+                m.position.set(
+                    s.destX,
+                    s.destY + baseY + baseY * spread / 0.065,
+                    0,
+                );
+                (m.material as THREE.MeshStandardMaterial).opacity = sliceOpacity;
+            });
+
+            /* ── RESUME ORBIT ───────────────────────────────────── */
+        } else {
+            s.phase = 'resume';
+            s.currentAngle += speed * 0.016;
+            mainRef.current.position.set(
+                Math.cos(s.currentAngle) * radius,
+                Math.sin(s.currentAngle) * radius,
+                0,
+            );
+            mainRef.current.visible = true;
+            (mainRef.current.material as THREE.MeshStandardMaterial).opacity = 1;
+            sliceRefs.current.forEach(m => { if (m) m.visible = false; });
         }
     });
+
     return (
-        <mesh ref={ref}>
-            <sphereGeometry args={[0.1, 12, 12]} />
-            <meshStandardMaterial color="#beb3b3ff" />
-        </mesh>
+        <>
+            {/* Main electron sphere */}
+            <mesh ref={mainRef}>
+                <sphereGeometry args={[0.1, 12, 12]} />
+                <meshStandardMaterial color="#030303ff" transparent />
+            </mesh>
+
+            {/* Split-line slices (thin horizontal bars) */}
+            {SLICE_OFFSETS.map((_, i) => (
+                <mesh
+                    key={i}
+                    ref={el => { sliceRefs.current[i] = el; }}
+                    visible={false}
+                >
+                    <boxGeometry args={[SLICE_WIDTHS[i], SLICE_HEIGHT, SLICE_HEIGHT]} />
+                    <meshStandardMaterial
+                        color="#080808ff"
+                        transparent
+                        opacity={0}
+                        depthWrite={false}
+                    />
+                </mesh>
+            ))}
+        </>
     );
 }
 
