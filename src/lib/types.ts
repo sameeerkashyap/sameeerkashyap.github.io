@@ -99,4 +99,5 @@ export interface PortfolioConfig {
     personalInterests: string[];
     personalImages: PersonalImage[];
     stickyBanner?: string;
+    stickyBannerLink?: string;
 }

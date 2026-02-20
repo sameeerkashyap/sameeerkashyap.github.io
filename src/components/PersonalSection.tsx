@@ -24,6 +24,9 @@ export default function PersonalSection({ personalInterests, personalImages }: P
                 <h2 className="serif text-2xl md:text-3xl font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
                     Life outside the lab
                 </h2>
+                <p className="text-md mb-6">
+                    I am an ocean lover at heart, hoping to conquer every wave and dive into every depth. When I'm not in the water, you can find me enjoying soccer, beaches running or swimming or just enjoying a sunny day.
+                </p>
                 <div className="flex flex-wrap gap-2 mb-8">
                     {personalInterests.map((interest) => (
                         <span key={interest} className="tag">
@@ -51,7 +54,7 @@ export default function PersonalSection({ personalInterests, personalImages }: P
                                 className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105 block"
                             />
                         </div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-100 flex items-end p-4">
                             <p className="text-white text-sm font-medium">{img.alt}</p>
                         </div>
                     </motion.div>
