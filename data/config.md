@@ -7,6 +7,7 @@ github: "https://github.com/sameeerkashyap"
 linkedin: "https://www.linkedin.com/in/sameer-kashyap-083a89184/"
 twitter: "https://twitter.com/sameeerkashyap"
 scholar: "https://scholar.google.com/citations?user=sameerkashyap"
+stickyBanner: "Hiring? I'm looking for SWE/AI Summer 2026 internship roles in the U.S!"
 
 education:
   - degree: "M.S in Computer Science & Engineering"

@@ -98,4 +98,5 @@ export interface PortfolioConfig {
     recommendedReading: RecommendedReading[];
     personalInterests: string[];
     personalImages: PersonalImage[];
+    stickyBanner?: string;
 }

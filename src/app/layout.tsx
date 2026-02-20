@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   },
 };
 
+import StickyBanner from "@/components/StickyBanner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -20,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <StickyBanner />
         {children}
       </body>
     </html>
