@@ -1,5 +1,6 @@
 import { getPortfolioConfig } from "@/lib/config";
 import { Megaphone } from "lucide-react";
+import BannerLink from "./BannerLink";
 
 export default function StickyBanner() {
     const config = getPortfolioConfig();
@@ -8,7 +9,7 @@ export default function StickyBanner() {
     const content = (
         <>
             <Megaphone className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>{config.stickyBanner}</span>
+            <span className="text-xs md:text-base">{config.stickyBanner}</span>
         </>
     );
 
@@ -16,14 +17,12 @@ export default function StickyBanner() {
 
     if (config.stickyBannerLink) {
         return (
-            <a
+            <BannerLink
                 href={config.stickyBannerLink}
-                target="_blank"
-                rel="noopener noreferrer"
                 className={commonClasses}
             >
                 {content}
-            </a>
+            </BannerLink>
         );
     }
 

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { WorkExperience, BlogPost, RecommendedReading, Project, ResearchExperience } from '@/lib/types';
 import { dispatchOpenTab } from '@/components/TabSystem';
 import ProjectDetail from '@/components/ProjectDetail';
+import { TAP_CARD, sendGAEvent } from '@/analytics/events';
 
 const CARD_COLORS = ['card-sage', 'card-sky', 'card-lavender', 'card-peach', 'card-rose', 'card-butter'];
 
@@ -64,6 +65,7 @@ export default function StackedColumns({
     // --- Tab Opening Handlers ---
 
     const openResearchTab = (item: ResearchExperience) => {
+        sendGAEvent(TAP_CARD, { type: 'Research', title: item.title });
         dispatchOpenTab({
             id: `research-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: item.title,
@@ -83,6 +85,7 @@ export default function StackedColumns({
     };
 
     const openWorkTab = (item: WorkExperience) => {
+        sendGAEvent(TAP_CARD, { type: 'Work', title: item.title });
         dispatchOpenTab({
             id: `work-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: item.title,
@@ -115,6 +118,7 @@ export default function StackedColumns({
     };
 
     const openProjectTab = (item: Project) => {
+        sendGAEvent(TAP_CARD, { type: 'Projects', title: item.title });
         dispatchOpenTab({
             id: `project-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: item.title,
@@ -125,6 +129,7 @@ export default function StackedColumns({
     };
 
     const openBlogTab = (item: BlogPost) => {
+        sendGAEvent(TAP_CARD, { type: 'Blog', title: item.title });
         dispatchOpenTab({
             id: `blog-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: item.title,
@@ -165,6 +170,7 @@ export default function StackedColumns({
     };
 
     const openReadingTab = (item: RecommendedReading) => {
+        sendGAEvent(TAP_CARD, { type: 'Reading', title: item.title });
         dispatchOpenTab({
             id: `reading-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: item.title,

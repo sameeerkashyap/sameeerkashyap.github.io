@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@next/third-parties": "^16.1.6",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@types/three": "^0.182.0",
+    "firebase": "^12.9.0",
     "framer-motion": "^12.34.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.568.0",
