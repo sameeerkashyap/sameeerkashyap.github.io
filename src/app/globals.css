@@ -510,6 +510,21 @@
   }
 }
 
+/* Reading list hyperlinks */
+.reading-link {
+  color: var(--mars-rust);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease, opacity 0.2s ease;
+  font-weight: 500;
+}
+
+.reading-link:hover {
+  text-decoration-color: var(--mars-rust);
+  opacity: 0.8;
+}
+
 /* Link animation */
 .link-hover {
   position: relative;

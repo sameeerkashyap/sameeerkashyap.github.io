@@ -4,6 +4,28 @@ import { motion } from 'framer-motion';
 import { CurrentWork } from '@/lib/types';
 import { dispatchOpenTab } from '@/components/TabSystem';
 
+// Parse a markdown-style link "[text](url)" into an <a> element.
+// If the string isn't a link it falls back to plain text.
+function parseReadingLink(item: string): React.ReactNode {
+    const match = item.match(/^\[(.+?)\]\((.+?)\)$/);
+    if (match) {
+        const text = match[1].replace(/:$/, '').trim();
+        const href = match[2];
+        return (
+            <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="reading-link"
+                onClick={e => e.stopPropagation()}
+            >
+                {text}
+            </a>
+        );
+    }
+    return item;
+}
+
 interface MarsCardProps {
     currentWork: CurrentWork;
     style?: React.CSSProperties; // Allow parent to control opacity/visibility
@@ -40,8 +62,8 @@ export default function MarsCard({ currentWork, style }: MarsCardProps) {
                             <ul className="space-y-3">
                                 {currentWork.reading.map(r => (
                                     <li key={r} className="flex gap-3 text-sm">
-                                        <span className="text-[var(--mars-rust)]">→</span>
-                                        {r}
+                                        <span className="text-[var(--mars-rust)] shrink-0">→</span>
+                                        {parseReadingLink(r)}
                                     </li>
                                 ))}
                             </ul>

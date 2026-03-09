@@ -25,7 +25,7 @@ export default function PersonalSection({ personalInterests, personalImages }: P
                     Life outside the lab
                 </h2>
                 <p className="text-md mb-6">
-                    I am an ocean lover at heart, hoping to conquer every wave and dive into every depth. When I'm not in the water, you can find me enjoying soccer, beaches running or swimming or just enjoying a sunny day.
+                    I am an ocean lover at heart, hoping to conquer every wave and dive into every depth. When I&apos;m not in the water, you can find me enjoying soccer, beaches, running or swimming or just enjoying a sunny day.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-8">
                     {personalInterests.map((interest) => (

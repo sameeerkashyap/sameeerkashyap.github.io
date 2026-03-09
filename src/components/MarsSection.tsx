@@ -4,6 +4,35 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CurrentWork } from '@/lib/types';
 
+// Parse a markdown-style link "[text](url)" into an <a> element.
+// If the string isn't a link it falls back to plain text.
+function parseReadingLink(item: string): React.ReactNode {
+    const match = item.match(/^\[(.+?)\]\((.+?)\)$/);
+    if (match) {
+        const text = match[1].replace(/:$/, '').trim(); // strip trailing colon
+        const href = match[2];
+        return (
+            <a
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                    color: 'var(--mars-rust)',
+                    textDecoration: 'underline',
+                    textUnderlineOffset: '3px',
+                    transition: 'opacity 0.15s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.75')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                onClick={e => e.stopPropagation()}
+            >
+                {text}
+            </a>
+        );
+    }
+    return item;
+}
+
 interface MarsSectionProps {
     currentWork: CurrentWork;
 }
@@ -192,8 +221,8 @@ export default function MarsSection({ currentWork }: MarsSectionProps) {
                                 <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                     {currentWork.reading.map((item) => (
                                         <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                                            <span style={{ color: 'var(--mars-rust)' }}>→</span>
-                                            {item}
+                                            <span style={{ color: 'var(--mars-rust)', flexShrink: 0 }}>→</span>
+                                            {parseReadingLink(item)}
                                         </li>
                                     ))}
                                 </ul>

@@ -8,7 +8,7 @@ linkedin: "https://www.linkedin.com/in/sameer-kashyap-083a89184/"
 twitter: "https://twitter.com/sameeerkashyap"
 scholar: "https://scholar.google.com/citations?user=sameerkashyap"
 stickyBanner: "Hiring? Let's chat! I'm looking for SWE/AI Summer 2026 internship roles in the U.S. Get my resumé ->"
-stickyBannerLink: "https://drive.google.com/file/d/1QD2piv1OSC6a48ijTiKJQnpuae4Mg4Rg/view?usp=sharing"
+stickyBannerLink: "https://drive.google.com/file/d/1YvSwTvmOZ-3w163D-2LZoyBNrjgU79zd/view?usp=sharing"
 
 education:
   - degree: "M.S in Computer Science & Engineering"
@@ -67,14 +67,15 @@ about: "I am a computational researcher and software engineer focused on the int
 
 currentWork:
   title: "Terraforming Mars — Planetary Simulation with Scientific ML"
-  description: "Engineering a PyTorch-based differential equation simulator projecting the energy requirements to achieve habitable surface conditions on Mars within one Martian year."
-  concept: "Using neural ODEs and physics-informed neural networks to model coupled atmospheric, thermal, and chemical dynamics of Mars terraforming. The simulator solves for energy budgets of ~10⁴⁰ J for temperature normalization and ~10²⁶ J for O₂ partial pressure targets."
-  progress: "Core thermodynamic model implemented. Currently integrating atmospheric chemistry modules and validating against NASA Mars Climate Database. Exploring reinforcement learning for optimal terraforming strategy selection."
+  description: "My current research focused on building a PyTorch-based differential equation simulator projecting the energy requirements to achieve habitable surface conditions on Mars."
+  concept: "Using ODEs and physics-informed neural networks to model coupled atmospheric, thermal, and chemical dynamics of Mars terraforming. The simulator aims to become a platform for simulating energy cost required, biological impact and chemical simulations required to make Mars habitable."
+  progress: "A Core framework consiting of celestial abstractions and a time controller engine that models the tempetratue, pressue and ice mass variations across a Martian year on three points of the North, South and Equator of Mars using a Coupled ODE System and Runge-Kutta integration method."
   reading:
-    - "Red Mars by Kim Stanley Robinson"
-    - "Making Mars Habitable (McKay et al., Nature 1991)"
-    - "Neural ODEs by Chen et al."
-    - "Physics-Informed Neural Networks (Raissi et al.)"
+    - "[The case for Mars terraforming research:](https://www.nature.com/articles/s41550-025-02548-0)"
+    - "[How to create an artificial magnetosphere for Mars:](https://www.sciencedirect.com/science/article/abs/pii/S0094576521005099)"
+    - "[Neural ODEs by Chen et al.](https://arxiv.org/abs/1806.07366)"
+    - "[Feasibility of keeping Mars warm with nanoparticles](https://www.science.org/doi/epdf/10.1126/sciadv.adn4650)"
+    - "[The radiation environment on the surface of Mars](https://www.sciencedirect.com/science/article/abs/pii/S2214552417300111)"
   tags:
     - PyTorch
     - Neural ODE
