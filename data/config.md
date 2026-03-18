@@ -8,7 +8,7 @@ linkedin: "https://www.linkedin.com/in/sameer-kashyap-083a89184/"
 twitter: "https://twitter.com/sameeerkashyap"
 scholar: "https://scholar.google.com/citations?user=sameerkashyap"
 stickyBanner: "Hiring? Let's chat! I'm looking for SWE/AI Summer 2026 internship roles in the U.S. Get my resumé ->"
-stickyBannerLink: "https://drive.google.com/file/d/1YvSwTvmOZ-3w163D-2LZoyBNrjgU79zd/view?usp=sharing"
+stickyBannerLink: "https://drive.google.com/file/d/1IpJnyL4Uo7TlsJvLeqAbowLNzS0AQh8Q/view?usp=sharing"
 
 education:
   - degree: "M.S in Computer Science & Engineering"
@@ -145,16 +145,6 @@ publications:
     year: 2024
 
 projects:
-  - title: "Assembly Agents"
-    description: "Multi-agent system with state machines simulating structured democratic legislative processes among autonomous AI agents. Improved coordination efficiency by optimizing message passing and state transitions."
-    tags:
-      - Python
-      - Multi-Agent
-      - LLM
-      - LangChain
-      - LangGraph
-    link: "https://github.com/sameeerkashyap/assembly-agents"
-
   - title: "Molecular Frames"
     description: "High-performing React frontend for interactive molecular dynamics visualization of complex proteins with WebGPU and Three.js. WebGPU-accelerated rendering boosted FPS by 2.5x for 10k+ atom structures."
     tags:
@@ -164,15 +154,6 @@ projects:
       - Molecular Dynamics
     link: "https://github.com/sameeerkashyap/molframes"
 
-  - title: "Fine-Tuning Llama 3.0"
-    description: "Leveraged LLMs to clean OCR outputs, fine-tuned on CORD v2 to extract menu items, quantities, and prices. Built unified high-performance inference server for production-ready LLMs using Nest.js."
-    tags:
-      - LLM
-      - Transformers
-      - Python
-      - NestJS
-    link: "https://github.com/sameeerkashyap/scalable-llama"
-
   - title: "CTD-FusionNet Deepfake Detection"
     description: "Designed multi-branch deepfake detection model fusing RGB, noise residuals, and transformer features. Achieved 99.4% AUC, 96.4% accuracy, and 0.961 F1-score."
     tags:
@@ -181,6 +162,26 @@ projects:
       - Computer Vision
       - Attention
     link: "https://github.com/sameeerkashyap/ctd-fusionnet-deepfake-detection"
+
+  - title: "locus.ai"
+    description: "Fine-tuned Qwen2.5-3B-Instruct with QLoRA on 6,000 curated Q&A pairs from GO-CC and Human Protein Atlas to answer structured queries about protein subcellular localization, tissue expression, and disease associations. Runs a Node.js inference server with <300ms latency using node-llama-cpp."
+    tags:
+      - Python
+      - LLM Fine-tuning
+      - QLoRA
+      - Bioinformatics
+      - Node.js
+    link: "https://github.com/sameeerkashyap/locus.ai"
+
+  - title: "Martens"
+    description: "Multi-agent reinforcement learning environment for making scientific discoveries on Mars. Implements the OpenEnv interface with a Dockerized server, WebSocket-based sessions, and a structured action-observation-reward loop. Deployable to Hugging Face Spaces."
+    tags:
+      - Python
+      - Reinforcement Learning
+      - Multi-Agent
+      - Docker
+      - OpenEnv
+    link: "https://github.com/sameeerkashyap/martens"
 
 blog:
   - title: "Why WebGPU Changes Everything for Scientific Visualization"
