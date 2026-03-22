@@ -69,7 +69,7 @@ currentWork:
   title: "Terraforming Mars — Planetary Simulation with Scientific ML"
   description: "My current research focused on building a PyTorch-based differential equation simulator projecting the energy requirements to achieve habitable surface conditions on Mars."
   concept: "Using ODEs and physics-informed neural networks to model coupled atmospheric, thermal, and chemical dynamics of Mars terraforming. The simulator aims to become a platform for simulating energy cost required, biological impact and chemical simulations required to make Mars habitable."
-  progress: "A Core framework consiting of celestial abstractions and a time controller engine that models the tempetratue, pressue and ice mass variations across a Martian year on three points of the North, South and Equator of Mars using a Coupled ODE System and Runge-Kutta integration method."
+  progress: "A core framework consisting of celestial abstractions and a time-controller engine that models temperature, pressure, and ice-mass variations across a Martian year at three points (North Pole, South Pole, and Equator) using a coupled ODE system and Runge-Kutta integration."
   reading:
     - "[The case for Mars terraforming research:](https://www.nature.com/articles/s41550-025-02548-0)"
     - "[How to create an artificial magnetosphere for Mars:](https://www.sciencedirect.com/science/article/abs/pii/S0094576521005099)"
