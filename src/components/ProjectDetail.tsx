@@ -245,7 +245,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     };
 
     return (
-        <div className="max-w-3xl mx-auto py-12 px-6">
+        <div className="max-w-5xl mx-auto py-12 px-6">
             {/* Header */}
             <p className="mono text-xs tracking-widest uppercase mb-4" style={{ color: 'var(--text-tertiary)' }}>
                 Project

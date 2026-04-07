@@ -99,8 +99,8 @@
 }
 
 .responsive-hero-padding {
-  padding-top: 45vh;
-  /* Mobile: push text down */
+  padding-top: calc(45vh + 90px);
+  /* Mobile: push text down past the LiveFeed banner */
 }
 
 @media (min-width: 768px) {

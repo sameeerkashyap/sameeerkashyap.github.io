@@ -19,7 +19,10 @@ export interface ResearchExperience {
     institution: string;
     location: string;
     period: string;
+    startDate?: string;
+    endDate?: string;
     description: string;
+    detailedDescription?: string;
     tags: string[];
 }
 
@@ -28,7 +31,10 @@ export interface WorkExperience {
     company: string;
     location: string;
     period: string;
+    startDate?: string;
+    endDate?: string;
     description: string;
+    detailedDescription?: string;
     highlights: string[];
     tags: string[];
 }

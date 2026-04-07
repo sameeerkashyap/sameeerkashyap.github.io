@@ -86,6 +86,9 @@ export default function StackedColumns({
 
     const openWorkTab = (item: WorkExperience) => {
         sendGAEvent(TAP_CARD, { type: 'Work', title: item.title });
+        const descriptions = item.detailedDescription
+            ? item.detailedDescription.split('\n').filter(Boolean)
+            : [item.description];
         dispatchOpenTab({
             id: `work-${item.title.toLowerCase().replace(/\s+/g, '-')}`,
             title: item.title,
@@ -98,10 +101,9 @@ export default function StackedColumns({
                     meta={item.period}
                     tags={item.tags}
                 >
-                    <p className="mb-6">{item.description}</p>
-                    {item.highlights && (
-                        <div className="bg-[var(--cream-100)] p-6 rounded-xl border border-[var(--cream-300)]">
-                            <h4 className="mono text-xs uppercase tracking-widest text-[var(--text-tertiary)] mb-4">Key Responsibilities</h4>
+                    {item.highlights && item.highlights.length > 0 && (
+                        <div className="bg-[var(--cream-100)] p-6 rounded-xl border border-[var(--cream-300)] mb-8">
+                            <h4 className="mono text-xs uppercase tracking-widest text-[var(--text-tertiary)] mb-4">Impact Highlights</h4>
                             <ul className="space-y-3">
                                 {item.highlights.map(h => (
                                     <li key={h} className="flex gap-3 text-sm">
@@ -112,6 +114,11 @@ export default function StackedColumns({
                             </ul>
                         </div>
                     )}
+                    <div className="space-y-4">
+                        {descriptions.map((para, idx) => (
+                            <p key={idx}>{para}</p>
+                        ))}
+                    </div>
                 </DetailLayout>
             )
         });
@@ -287,7 +294,7 @@ export default function StackedColumns({
                 <div>
                     <p className="column-header">Some of my thoughts</p>
 
-                    {blog.map((item, i) => (
+                    {(blog ?? []).map((item, i) => (
                         <motion.div
                             key={`blog-${item.title}`}
                             className="sticky-card"

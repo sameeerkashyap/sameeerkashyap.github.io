@@ -12,6 +12,7 @@ import StackedColumns from '@/components/StackedColumns';
 import PersonalSection from '@/components/PersonalSection';
 import Footer from '@/components/Footer';
 import TabSystem from '@/components/TabSystem';
+import LiveFeed from '@/components/LiveFeed';
 
 const HeroScene = dynamic(() => import('@/components/ParallaxScene'), { ssr: false });
 
@@ -58,6 +59,19 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
 
     return (
         <div className="relative">
+            {/* Live feed ticker - sticky at the very top */}
+            <div style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 60,
+            }}>
+                <LiveFeed
+                    projects={config.projects}
+                    publications={config.publications}
+                    blog={config.blog}
+                />
+            </div>
+
             {/* Social sidebar */}
             <SocialSidebar
                 github={config.github}
