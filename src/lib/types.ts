@@ -23,6 +23,7 @@ export interface ResearchExperience {
     endDate?: string;
     description: string;
     detailedDescription?: string;
+    highlights?: string[];
     tags: string[];
 }
 

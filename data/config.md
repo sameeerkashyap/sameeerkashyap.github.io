@@ -1,6 +1,6 @@
 ---
 name: "Sameer Kashyap"
-tagline: "I am graudate student at UC Santa Cruz researching AI systems. My research interests are in Scientific Computing and modelling, AI Safety and fairness, and Agentic AI systems. I previously worked as SDE-II full stack mobile engineer and love building rich user experiences."
+tagline: "I am graduate student at UC Santa Cruz. My research interests are in World models, Scientific Computing and modelling, Agentic AI systems, and AI Safety and fairness. I previously worked as SDE-II full stack mobile engineer and love building rich user experiences."
 location: "San Francisco / Santa Cruz, California"
 email: "ssudars1@ucsc.edu"
 github: "https://github.com/sameeerkashyap"
@@ -66,7 +66,7 @@ researchInterests:
 about: "I am a computational researcher and software engineer focused on the intersection of scientific machine learning, agentic AI, and large-scale simulation. My current work involves modeling planetary-scale thermodynamic systems for Mars terraforming using PyTorch-based differential equation solvers. Previously, I built production systems at scale — from LLM-driven server-driven UI frameworks to offline-first mobile architectures serving millions of users."
 
 currentWork:
-  title: "Terraforming Mars — Planetary Simulation with Scientific ML"
+  title: "Terraforming Mars"
   description: "My current research focused on building a PyTorch-based differential equation simulator projecting the energy requirements to achieve habitable surface conditions on Mars."
   concept: "Using ODEs and physics-informed neural networks to model coupled atmospheric, thermal, and chemical dynamics of Mars terraforming. The simulator aims to become a platform for simulating energy cost required, biological impact and chemical simulations required to make Mars habitable."
   progress: "A core framework consisting of celestial abstractions and a time-controller engine that models temperature, pressure, and ice-mass variations across a Martian year at three points (North Pole, South Pole, and Equator) using a coupled ODE system and Runge-Kutta integration."
@@ -88,6 +88,10 @@ researchExperience:
     location: "Santa Cruz, CA"
     period: "October 2025 – Present"
     description: "Engineered a PyTorch-based differential equation Mars terraforming simulator projecting 10⁴⁰ and 10²⁶ J to achieve 0°C mean surface temperature and 20 Pa O₂ partial pressure within one Martian year. Developed a self-refining Prolog system integrating LangChain, LangGraph, and RAG to enable iterative logic tracing in LLM pipelines, improving logical output interpretability from natural language by 40%."
+    highlights:
+      - "Engineered a PyTorch-based differential equation Mars terraforming simulator modeling thermodynamic surface physics to project energy requirements"
+      - "Developed a self-refining Prolog system integrating LangChain, LangGraph & RAG to enable iterative logic tracing in LLM pipelines, improving interpretability by 40%"
+      - "Researching Scientific ML, Neural ODEs, AI safety, alignment and automated multi-agent systems"
     tags:
       - PyTorch
       - Neural ODE
@@ -294,15 +298,15 @@ personalImages:
   - src: "/images/personal/4.jpg"
     alt: "Cowell, Santa Cruz 🏄"
   - src: "/images/personal/3.jpg"
-    alt: "UCSC Triathlete"
-  - src: "/images/personal/2.jpg"
-    alt: "Soccer 💜"
+    alt: "Triathlete"
+  # - src: "/images/personal/2.jpg"
+  #   alt: "Soccer 💜"
   - src: "/images/personal/5.jpg"
     alt: "Laguna Beach, Los Angeles"
   - src: "/images/personal/6.jpg"
     alt: "Santa Cruz Wharf"
-  - src: "/images/personal/9.jpg"
-    alt: "Protien meals"
+  # - src: "/images/personal/9.jpg"
+  #   alt: "Protien meals"
   - src: "/images/personal/8.jpg"
     alt: "Mulki, Karnataka"
   - src: "/images/personal/7.png"
