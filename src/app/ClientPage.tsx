@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { PortfolioConfig } from "@/lib/types";
 import HeroSection from "@/components/HeroSection";
 import SocialSidebar from "@/components/SocialSidebar";
-import AboutSection from "@/components/AboutSection";
-import MarsCard from "@/components/MarsCard"; // Just the overlay
+import MarsCard from "@/components/MarsCard";
 import PublicationsSection from "@/components/PublicationsSection";
 import RocketTimeline from "@/components/RocketTimeline";
 import StackedColumns from "@/components/StackedColumns";
@@ -19,60 +18,56 @@ const HeroScene = dynamic(() => import("@/components/ParallaxScene"), {
   ssr: false,
 });
 
-/* 
-   HomeTabContent:
-   The main scrollable content for the "Home" tab.
-   Contains the Hero Scroll Sequence (Atom -> Solar -> Mars Card) followed by other sections.
-*/
 function HomeTabContent({ config }: { config: PortfolioConfig }) {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const heroContainerRef = useRef<HTMLDivElement>(null);
+  const heroTextDivRef = useRef<HTMLDivElement>(null);
+  const marsCardDivRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Find the scrollable container provided by TabSystem (id="tab-content-home")
     const container = document.getElementById("tab-content-home");
     if (!container) return;
 
     const onScroll = () => {
-      if (!heroContainerRef.current) return;
-      const scrollTop = container.scrollTop;
+      // Coalesce to one update per animation frame
+      if (rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        const totalScrollDistance = container.clientHeight * 2;
+        const progress = Math.min(
+          1,
+          Math.max(0, container.scrollTop / totalScrollDistance),
+        );
 
-      // Hero container height: We want scroll progress 0 to 1 over the sticky duration.
-      // Let's assume the sticky container is 250vh tall to allow enough scroll time.
-      const totalScrollDistance = container.clientHeight * 2;
+        // Direct DOM mutations — no React re-renders on scroll
+        const heroTextOpacity = Math.max(0, 1 - progress * 2.5);
+        if (heroTextDivRef.current) {
+          heroTextDivRef.current.style.opacity = String(heroTextOpacity);
+          heroTextDivRef.current.style.transform = `translateY(${progress * -80}px)`;
+          heroTextDivRef.current.style.pointerEvents =
+            heroTextOpacity > 0.1 ? "auto" : "none";
+        }
 
-      const progress = Math.min(
-        1,
-        Math.max(0, scrollTop / totalScrollDistance),
-      );
-      setScrollProgress(progress);
+        const marsCardOpacity = Math.max(0, (progress - 0.7) * 3.33);
+        if (marsCardDivRef.current) {
+          marsCardDivRef.current.style.opacity = String(marsCardOpacity);
+          marsCardDivRef.current.style.pointerEvents =
+            marsCardOpacity > 0.1 ? "auto" : "none";
+        }
+      });
     };
 
     container.addEventListener("scroll", onScroll, { passive: true });
-    onScroll(); // Trigger once on mount
-
-    return () => container.removeEventListener("scroll", onScroll);
+    onScroll();
+    return () => {
+      container.removeEventListener("scroll", onScroll);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
-
-  // Calculate opacities for the overlapping hero content
-  // Hero Text (Name, etc): Fade out 0 -> 0.4
-  const heroTextOpacity = Math.max(0, 1 - scrollProgress * 2.5);
-  const heroTextPointerEvents = heroTextOpacity > 0.1 ? "auto" : "none";
-
-  // Mars Card (Overlay): Fade in 0.7 -> 1.0
-  const marsCardOpacity = Math.max(0, (scrollProgress - 0.7) * 3.33);
-  const marsCardPointerEvents = marsCardOpacity > 0.1 ? "auto" : "none";
 
   return (
     <div className="relative">
-      {/* Live feed ticker - sticky at the very top */}
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 60,
-        }}
-      >
+      <div style={{ position: "sticky", top: 0, zIndex: 60 }}>
         <LiveFeed
           projects={config.projects}
           publications={config.publications}
@@ -80,7 +75,6 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
         />
       </div>
 
-      {/* Social sidebar */}
       <SocialSidebar
         github={config.github}
         linkedin={config.linkedin}
@@ -90,23 +84,12 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
       />
 
       <main className="page-content">
-        {/* ======= HERO CONTAINER (Sticky) ======= */}
-        {/* 
-                    This pure CSS parallax implementation relies on the container being tall 
-                    while the inner content is 'sticky' or 'fixed' within it. 
-                */}
-        {/* ======= HERO CONTAINER (Spacer) ======= */}
-        {/* 
-                    Scene is now FIXED in the background.
-                    This container provides the scroll space (350vh) to drive the animation 
-                    fully to 100% progress before the next section overlaps.
-                */}
         <div
           ref={heroContainerRef}
           className="hero-scene-container"
           style={{ height: "350vh", position: "relative" }}
         >
-          {/* Fixed Background Scene */}
+          {/* Fixed Background Scene — owns its own scroll listener */}
           <div
             style={{
               position: "fixed",
@@ -115,33 +98,36 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
               pointerEvents: "none",
             }}
           >
-            <HeroScene scrollProgress={scrollProgress} />
+            <HeroScene />
           </div>
 
           <div className="sticky top-0 w-full h-screen overflow-hidden">
-            {/* 2. Hero Text (Name) - Fades Out */}
+            {/* Hero Text — fades + slides up via direct DOM style */}
             <div
+              ref={heroTextDivRef}
               style={{
                 position: "absolute",
                 inset: 0,
-                opacity: heroTextOpacity,
-                pointerEvents: heroTextPointerEvents as any,
+                opacity: 1,
+                transform: "translateY(0px)",
+                pointerEvents: "auto",
                 zIndex: 10,
               }}
             >
-              <HeroSection config={config} scrollProgress={scrollProgress} />
+              <HeroSection config={config} />
             </div>
 
-            {/* 3. Mars Card Overlay - Fades In over the 3D Mars */}
+            {/* Mars Card — fades in via direct DOM style */}
             <div
+              ref={marsCardDivRef}
               style={{
                 position: "absolute",
                 inset: 0,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-start",
-                opacity: marsCardOpacity,
-                pointerEvents: marsCardPointerEvents as any,
+                opacity: 0,
+                pointerEvents: "none",
                 zIndex: 20,
               }}
             >
@@ -152,38 +138,22 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
           </div>
         </div>
 
-        {/* ======= REST OF CONTENT ======= */}
-        {/* 
-                    Because the hero container holds the scroll space, 
-                    AboutSection appears naturally after scrolling 250vh.
-                */}
-
-        {/* <AboutSection about={config.about} education={config.education} /> */}
-
-        {/* 
-                    Sections 3+ (Publications, etc.)
-                    Wrapped in opaque background to cover the Fixed Mars Scene.
-                */}
         <div className="relative z-10 bg-[var(--cream-50)]">
           <RocketTimeline
             education={config.education}
             workExperience={config.workExperience}
             researchExperience={config.researchExperience}
           />
-
           <PublicationsSection publications={config.publications} />
-
           <StackedColumns
             projects={config.projects}
             blog={config.blog}
             recommendedReading={config.recommendedReading}
           />
-
           <PersonalSection
             personalInterests={config.personalInterests}
             personalImages={config.personalImages}
           />
-
           <Footer name={config.name} />
         </div>
       </main>

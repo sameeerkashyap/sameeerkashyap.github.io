@@ -5,23 +5,11 @@ import { PortfolioConfig } from '@/lib/types';
 
 interface HeroSectionProps {
     config: PortfolioConfig;
-    scrollProgress: number;
 }
 
-export default function HeroSection({ config, scrollProgress }: HeroSectionProps) {
-    // Fade out hero text as scroll progresses
-    const heroOpacity = Math.max(0, 1 - scrollProgress * 3);
-    const heroY = scrollProgress * -80;
-
+export default function HeroSection({ config }: HeroSectionProps) {
     return (
-        <div
-            className="hero-overlay responsive-hero-padding"
-            style={{
-                opacity: heroOpacity,
-                transform: `translateY(${heroY}px)`,
-                transition: 'none',
-            }}
-        >
+        <div className="hero-overlay responsive-hero-padding">
             <motion.p
                 className="mono text-xs tracking-widest uppercase mb-4"
                 style={{ color: 'var(--text-tertiary)' }}

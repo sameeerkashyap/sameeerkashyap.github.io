@@ -182,7 +182,24 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
     const [idx, setIdx] = useState(0);
     const [dir, setDir] = useState<1 | -1>(1);
     const [paused, setPaused] = useState(false);
+    const [visible, setVisible] = useState(true);
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastScrollY = useRef(0);
+
+    // Hide on scroll down, reveal on scroll up
+    useEffect(() => {
+        const container = document.getElementById('tab-content-home');
+        if (!container) return;
+        const onScroll = () => {
+            const y = container.scrollTop;
+            if (y < 10) setVisible(true);
+            else if (y - lastScrollY.current > 4) setVisible(false);
+            else if (lastScrollY.current - y > 4) setVisible(true);
+            lastScrollY.current = y;
+        };
+        container.addEventListener('scroll', onScroll, { passive: true });
+        return () => container.removeEventListener('scroll', onScroll);
+    }, []);
 
     const advance = useCallback((step: 1 | -1) => {
         setDir(step);
@@ -202,6 +219,12 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
     const badge = BADGE[item.category];
 
     return (
+        <motion.div
+            initial={false}
+            animate={{ height: visible ? 'auto' : 0, opacity: visible ? 1 : 0 }}
+            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: 'hidden' }}
+        >
         <div
             className="livefeed-root"
             onMouseEnter={() => setPaused(true)}
@@ -516,5 +539,6 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
                 }
             `}</style>
         </div>
+        </motion.div>
     );
 }

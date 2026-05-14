@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
@@ -95,6 +95,31 @@ export default function RocketTimeline({ education, workExperience, researchExpe
         return () => window.removeEventListener('resize', check);
     }, []);
 
+    // Close expanded card on scroll/swipe (mobile only)
+    const sectionRef = useRef<HTMLElement>(null);
+    const touchStartY = useRef(0);
+    useEffect(() => {
+        if (!isMobile || pinnedIndex === null) return;
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const onTouchStart = (e: TouchEvent) => {
+            touchStartY.current = e.touches[0].clientY;
+        };
+        const onTouchMove = (e: TouchEvent) => {
+            if (Math.abs(e.touches[0].clientY - touchStartY.current) > 30) {
+                setPinnedIndex(null);
+            }
+        };
+
+        section.addEventListener('touchstart', onTouchStart, { passive: true });
+        section.addEventListener('touchmove', onTouchMove, { passive: true });
+        return () => {
+            section.removeEventListener('touchstart', onTouchStart);
+            section.removeEventListener('touchmove', onTouchMove);
+        };
+    }, [isMobile, pinnedIndex]);
+
     const timelineData = [
         {
             id: 'frontrow',
@@ -149,7 +174,7 @@ export default function RocketTimeline({ education, workExperience, researchExpe
     };
 
     return (
-        <section className="relative overflow-hidden py-16 px-4 md:px-8 bg-[#0c0a09] border-y border-neutral-900" id="experience">
+        <section ref={sectionRef} className="relative overflow-hidden py-16 px-4 md:px-8 bg-[#0c0a09] border-y border-neutral-900" id="experience">
             {/* Background stars */}
             <div className="absolute inset-0 opacity-15 pointer-events-none" style={{
                 backgroundImage: 'radial-gradient(1px 1px at 20px 30px,#fff,rgba(0,0,0,0)),radial-gradient(1px 1px at 75px 120px,#fef08a,rgba(0,0,0,0)),radial-gradient(1.5px 1.5px at 150px 80px,#93c5fd,rgba(0,0,0,0))',
@@ -384,8 +409,8 @@ export default function RocketTimeline({ education, workExperience, researchExpe
 
                                         {/* Tags */}
                                         <div className="pt-4 border-t border-neutral-900 flex flex-wrap gap-1.5">
-                                            {currentItem.tags.map(tag => (
-                                                <span key={tag} className="text-[9px] mono px-2 py-0.5 rounded border bg-neutral-900/60 text-neutral-400 border-neutral-800">{tag}</span>
+                                            {currentItem.tags.map((tag, i) => (
+                                                <span key={`${tag}-${i}`} className="text-[9px] mono px-2 py-0.5 rounded border bg-neutral-900/60 text-neutral-400 border-neutral-800">{tag}</span>
                                             ))}
                                         </div>
                                     </motion.div>
