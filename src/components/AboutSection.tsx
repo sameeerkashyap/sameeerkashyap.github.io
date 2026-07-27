@@ -43,9 +43,9 @@ export default function AboutSection({ about, education }: AboutSectionProps) {
                     viewport={{ once: true }}
                     transition={{ delay: 0.3 + i * 0.1 }}
                 >
-                    <span className="mono text-[10px] tracking-widest" style={{ color: 'var(--text-tertiary)' }}>
+                    {/* <span className="mono text-[10px] tracking-widest" style={{ color: 'var(--text-tertiary)' }}>
                         {edu.period}
-                    </span>
+                    </span> */}
                     <span className="font-medium">{edu.degree}</span>
                     <span style={{ color: 'var(--text-tertiary)' }}>—</span>
                     <span style={{ color: 'var(--text-secondary)' }}>{edu.institution}</span>

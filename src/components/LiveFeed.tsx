@@ -236,7 +236,7 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
                 {/* Left: live pill + divider */}
                 <div className="livefeed-left">
                     <span className="livefeed-dot" />
-                    <span className="livefeed-latest mono">Latest</span>
+                    <span className="livefeed-latest mono">Latest news</span>
                     <div className="livefeed-divider" />
                 </div>
 

@@ -2,11 +2,16 @@
 name: "Sameer Kashyap"
 tagline: "I am graduate student at UC Santa Cruz. My research interests are in World models, Scientific Computing and modelling, Agentic AI systems, and AI Safety and fairness. I previously worked as SDE-II full stack mobile engineer and love building rich user experiences."
 location: "San Francisco / Santa Cruz, California"
+profileImage: "/images/personal/10.jpg"
 email: "ssudars1@ucsc.edu"
 github: "https://github.com/sameeerkashyap"
 linkedin: "https://www.linkedin.com/in/sameer-kashyap-083a89184/"
 twitter: "https://twitter.com/sameeerkashyap"
 scholar: "https://scholar.google.com/citations?user=sameerkashyap"
+githubActivity:
+  count: 1            # how many pull requests to show (1–3)
+  uniqueRepos: false   # true = one PR per repository, false = latest PRs even from the same repo
+
 stickyBanner: "Hiring for AI roles ? Let's chat! Get my resumé ->"
 stickyBannerLink: "https://drive.google.com/file/d/1IpJnyL4Uo7TlsJvLeqAbowLNzS0AQh8Q/view?usp=sharing"
 
@@ -14,7 +19,7 @@ education:
   - degree: "M.S in Computer Science & Engineering"
     institution: "University of California, Santa Cruz"
     location: "Santa Cruz, CA"
-    period: "September 2025 – June 2027"
+    # period: "September 2025 – June 2027"
 
 skills:
   languages:
@@ -59,11 +64,11 @@ skills:
 
 researchInterests:
   - "Scientific Machine Learning"
-  - "Agentic AI & LLM Systems"
-  - "AI Safety and Fairness"
+  - "Agentic AI"
+  - "AI Safety"
   - "Computational Sciences"
 
-about: "I am a computational researcher and software engineer focused on the intersection of scientific machine learning, agentic AI, and large-scale simulation. My current work involves modeling planetary-scale thermodynamic systems for Mars terraforming using PyTorch-based differential equation solvers. Previously, I built production systems at scale — from LLM-driven server-driven UI frameworks to offline-first mobile architectures serving millions of users."
+about: "I am currently a Graduate student at UCSC advised by Prof. Razvan Marinescu, my research involves developing atmospheric and planetary simualtions for Mars and Earth's Ocean. I am also curious about Agentic AI for scientific tasks and the safety of AI systems. In the past I was a software engineer building mobile applications and scaling backend systems."
 
 currentWork:
   title: "Terraforming Mars"
@@ -164,9 +169,16 @@ workExperience:
       - Freemium
 
 publications:
+  - title: "World Models Are the Right Foundation for Simulating Mars Terraforming"
+    venue: "Neural Information Processing Systems (NeurIPS) 2026"
+    status: "Preprint"
+    link: "https://drive.google.com/file/d/1et3Oe_ep3DvozVZcf39C1bo7fa8HyMKt/view?usp=sharing"
+    year: 2026
+
   - title: "Explainable AI for Wildfire Management and Ecological Sustainability"
     venue: "Artificial Intelligence for Sustainability, IJCAI 2025"
-    status: "Accepted"
+    status: "Published"
+    link: "https://link.springer.com/chapter/10.1007/978-3-032-21184-2_14"
     year: 2025
 
   - title: "A Comparative Review on Adaptive and Explainable Ensemble Learning for Email Phishing Detection"

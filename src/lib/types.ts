@@ -83,10 +83,17 @@ export interface PersonalImage {
     alt: string;
 }
 
+export interface GitHubActivity {
+    count?: number;        // 1–3 pull requests
+    uniqueRepos?: boolean; // one PR per repo, or the latest regardless of repo
+}
+
 export interface PortfolioConfig {
     name: string;
     tagline: string;
     location: string;
+    profileImage?: string;
+    githubActivity?: GitHubActivity;
     email: string;
     github: string;
     linkedin: string;

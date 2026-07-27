@@ -7,10 +7,13 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 
 /* ================================================================
-   Scroll-driven hero:
-   - BLACKHOLE: Gargantua model, fades out as solar system appears.
+   Scroll-driven Mars research scene:
    - SOLAR: Sun GLB, procedural planets, Mars zooms to center.
+   The sequence starts as soon as the section's top reaches the
+   middle of the screen, so it bleeds up into the section above.
    - CAMERA: Zoom logic (Phase 0 → Phase 1 → Phase 2).
+   Progress is measured from the scene container's own position in
+   the page, so the scene can sit anywhere in the scroll flow.
    All components read a scrollRef directly in useFrame — zero React
    re-renders from scroll events.
    ================================================================ */
@@ -23,83 +26,6 @@ const cityUrl = '/models/mars.glb';
 const sunUrl = '/models/sun.glb';
 
 type ScrollRef = React.RefObject<number>;
-
-// ─── BLACKHOLE ────────────────────────────────────────────────────
-
-function BlackholeModel() {
-    const { scene } = useGLTF('/models/blackhole-v2.glb');
-    const ref = useRef<THREE.Group>(null);
-
-    const { clonedScene, emissiveMats } = useMemo(() => {
-        const clone = scene.clone();
-        const mats: THREE.MeshStandardMaterial[] = [];
-        clone.traverse((child) => {
-            if ((child as THREE.Mesh).isMesh) {
-                const mesh = child as THREE.Mesh;
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-                if (mesh.material) {
-                    const raw = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-                    raw.forEach((m) => {
-                        if (m instanceof THREE.MeshStandardMaterial) {
-                            m.needsUpdate = true;
-                            if (m.emissiveMap || m.emissive.getHex() !== 0) {
-                                m.emissiveIntensity = Math.max(m.emissiveIntensity, 1.5);
-                                mats.push(m);
-                            }
-                        }
-                    });
-                }
-            }
-        });
-        const box = new THREE.Box3().setFromObject(clone);
-        const size = new THREE.Vector3();
-        box.getSize(size);
-        const maxDim = Math.max(size.x, size.y, size.z);
-        if (maxDim > 0) clone.scale.multiplyScalar(4.5 / maxDim);
-        const scaledBox = new THREE.Box3().setFromObject(clone);
-        const center = new THREE.Vector3();
-        scaledBox.getCenter(center);
-        clone.position.sub(center);
-        return { clonedScene: clone, emissiveMats: mats };
-    }, [scene]);
-
-    useFrame((state, delta) => {
-        if (!ref.current) return;
-        ref.current.rotation.y += delta * 0.25;
-        const pulse = 0.5 + 0.5 * Math.sin(state.clock.elapsedTime * 1.2);
-        emissiveMats.forEach(m => { m.emissiveIntensity = 1.2 + pulse * 0.8; });
-    });
-
-    return (
-        <group ref={ref} rotation={[0.15, 0, 0]}>
-            <primitive object={clonedScene} />
-        </group>
-    );
-}
-
-function AtomGroup({ scrollRef }: { scrollRef: ScrollRef }) {
-    const ref = useRef<THREE.Group>(null);
-    const { viewport } = useThree();
-    const isMobile = viewport.width < 6;
-
-    useFrame(() => {
-        const fadeT = smoothstep(clamp01((scrollRef.current - 0.15) / 0.2));
-        if (ref.current) {
-            const baseScale = isMobile ? 0.5 : 0.7;
-            ref.current.scale.setScalar(lerp(baseScale, 0, fadeT));
-            ref.current.visible = fadeT < 1;
-        }
-    });
-
-    return (
-        <group ref={ref} position={isMobile ? [0, 1.3, 0] : [3, 0, 0]}>
-            <Suspense fallback={null}>
-                <BlackholeModel />
-            </Suspense>
-        </group>
-    );
-}
 
 // ─── SOLAR SYSTEM ─────────────────────────────────────────────────
 
@@ -124,8 +50,7 @@ function Planets({ scrollRef }: { scrollRef: ScrollRef }) {
         if (!groupRef.current) return;
         const t = state.clock.elapsedTime;
         const sp = scrollRef.current;
-        // Start after blackhole fully fades (0.35)
-        const appear = smoothstep(clamp01((sp - 0.36) / 0.15));
+        const appear = smoothstep(clamp01((sp - 0.05) / 0.15));
         const fade = clamp01(1 - (sp - 0.70) / 0.20);
         const opacity = appear * fade;
 
@@ -206,7 +131,7 @@ function SunModel({ scrollRef }: { scrollRef: ScrollRef }) {
     useFrame(() => {
         if (!ref.current) return;
         const sp = scrollRef.current ?? 0;
-        const appear = smoothstep(clamp01((sp - 0.20) / 0.2));
+        const appear = smoothstep(clamp01(sp / 0.15));
         const fade = clamp01(1 - (sp - 0.70) / 0.20);
         ref.current.scale.setScalar(appear * 0.005);
         ref.current.rotation.y += 0.002;
@@ -243,8 +168,8 @@ function MarsModel({ scrollRef }: { scrollRef: ScrollRef }) {
     useFrame((state) => {
         if (!ref.current) return;
         const sp = scrollRef.current ?? 0;
-        const marsVisible = smoothstep(clamp01((sp - 0.25) / 0.2));
-        const marsZoom = smoothstep(clamp01((sp - 0.45) / 0.3));
+        const marsVisible = smoothstep(clamp01((sp - 0.02) / 0.15));
+        const marsZoom = smoothstep(clamp01((sp - 0.25) / 0.35));
 
         ref.current.rotation.y = state.clock.elapsedTime * 0.08;
         const orbitAngle = state.clock.elapsedTime * 0.22;
@@ -271,8 +196,8 @@ function CameraController({ scrollRef }: { scrollRef: ScrollRef }) {
     const { camera } = useThree();
     useFrame(() => {
         const sp = scrollRef.current;
-        const p1 = smoothstep(clamp01(sp / 0.30));
-        const p2 = smoothstep(clamp01((sp - 0.45) / 0.30));
+        const p1 = smoothstep(clamp01(sp / 0.25));
+        const p2 = smoothstep(clamp01((sp - 0.30) / 0.35));
         const z = lerp(5, 22, p1) - p2 * 20;
         const y = p1 * 10 - p2 * 9;
         camera.position.set(0, Math.max(y, 0.2), Math.max(z, 1.8));
@@ -288,7 +213,6 @@ function SceneContent({ scrollRef }: { scrollRef: ScrollRef }) {
             <pointLight position={[0, 0, 0]} intensity={2.5} color="#ffd700" distance={30} />
             <directionalLight position={[5, 5, 5]} intensity={0.5} />
             <CameraController scrollRef={scrollRef} />
-            <AtomGroup scrollRef={scrollRef} />
             <Planets scrollRef={scrollRef} />
             <Suspense fallback={null}>
                 <SunModel scrollRef={scrollRef} />
@@ -303,13 +227,20 @@ function SceneContent({ scrollRef }: { scrollRef: ScrollRef }) {
 export default function ParallaxScene() {
     const scrollRef = useRef<number>(0);
 
-    // Own scroll listener — no React state, no re-renders
+    // Own scroll listener — no React state, no re-renders.
+    // Progress is 0 when the scene section's top reaches the viewport top,
+    // and 1 once its last screenful has scrolled past.
     useEffect(() => {
         const container = document.getElementById('tab-content-home');
-        if (!container) return;
+        const section = document.getElementById('mars-scene');
+        if (!container || !section) return;
         const onScroll = () => {
-            const totalScrollDistance = container.clientHeight * 2;
-            scrollRef.current = Math.min(1, Math.max(0, container.scrollTop / totalScrollDistance));
+            const rect = section.getBoundingClientRect();
+            // Start the moment the section's top reaches mid-screen
+            const lead = container.clientHeight * 0.5;
+            const travel = rect.height - lead;
+            const passed = container.getBoundingClientRect().top + lead - rect.top;
+            scrollRef.current = Math.min(1, Math.max(0, passed / Math.max(1, travel)));
         };
         container.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
@@ -342,4 +273,3 @@ export default function ParallaxScene() {
 
 useGLTF.preload(cityUrl);
 useGLTF.preload(sunUrl);
-useGLTF.preload('/models/blackhole-v2.glb');

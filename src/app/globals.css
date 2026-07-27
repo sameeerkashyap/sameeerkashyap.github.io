@@ -91,52 +91,452 @@
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-/* ========== HERO SCENE ========== */
-.hero-scene-container {
+/* ========== ACADEMIC HERO ========== */
+.academic-hero {
   position: relative;
-  width: 100%;
-  height: 300vh;
+  background: var(--cream-50);
 }
 
-.responsive-hero-padding {
-  padding-top: calc(45vh + 90px);
-  /* Mobile: push text down past the LiveFeed banner */
+.academic-masthead {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 5rem) 0;
 }
 
-@media (min-width: 768px) {
-  .responsive-hero-padding {
-    padding-top: 0;
+.academic-masthead-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.academic-masthead-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .academic-masthead-row {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 1.25rem;
   }
 }
 
-.hero-canvas-wrapper {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 1;
+.academic-name {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
 }
 
-.hero-overlay {
-  position: absolute;
-  inset: 0;
+.academic-location {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+}
+
+.academic-affiliation {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+}
+
+.academic-period {
+  font-size: 0.78rem;
+}
+
+.academic-sep {
+  color: var(--text-tertiary);
+  margin: 0 0.5rem;
+}
+
+/* Portrait */
+.academic-portrait {
+  flex: 0 0 auto;
+  width: clamp(132px, 16.5vw, 220px);
+  /* aspect-ratio: 9 / 14; */
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--cream-300);
+  box-shadow: 0 10px 30px rgba(45, 42, 38, 0.08);
+  background: var(--cream-200);
+}
+
+.academic-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+.academic-bio {
+  max-width: 68ch;
+  margin-top: 1.25rem;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+.academic-interests {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.academic-interests-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.academic-tag {
+  background-color: var(--cream-200);
+  border: 1px solid var(--cream-300);
+  font-size: 0.7rem;
+  padding: 3px 10px;
+}
+
+/* ---- Index: Research · Papers · Projects ---- */
+.academic-index {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 5vw, 5rem) 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .academic-index {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.academic-col-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid var(--cream-300);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.academic-col-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  transition: color 0.2s ease;
+}
+
+.academic-col-link:hover {
+  color: var(--mars-rust);
+}
+
+.academic-entry {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  z-index: 10;
-  pointer-events: none;
-  padding: 0 clamp(1.5rem, 5vw, 5rem);
+  gap: 0.3rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid transparent;
 }
 
-@media (min-width: 768px) {
-  .hero-overlay {
-    padding-right: calc(var(--social-bar-width) + 2rem);
-  }
+.academic-entry-button,
+.academic-entry-feature {
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-left: -0.75rem;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.hero-overlay * {
-  pointer-events: auto;
+.academic-entry-button:hover,
+.academic-entry-feature:hover {
+  background: var(--cream-200);
+  transform: translateX(2px);
+}
+
+.academic-entry-feature {
+  border-left: 2px solid var(--mars-rust);
+  border-radius: 0 10px 10px 0;
+  padding-left: 1rem;
+  margin-left: 0;
+  margin-bottom: 0.5rem;
+}
+
+.academic-entry-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+}
+
+.academic-entry-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.academic-entry-title-sm {
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-primary);
+  display: block;
+}
+
+.academic-entry-body {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.academic-entry-more {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mars-rust);
+  margin-top: 0.25rem;
+}
+
+/* ---- Live GitHub pull requests ---- */
+.gh-pr-block {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cream-300);
+}
+
+.gh-pr-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.gh-pr-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: var(--pastel-sage-deep);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.gh-pr-link {
+  color: var(--text-tertiary);
+  text-transform: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+
+.gh-pr-link:hover {
+  color: var(--mars-rust);
+}
+
+.gh-pr-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.gh-pr-item {
+  display: block;
+  position: relative;
+  padding: 0.5rem 0.6rem 0.5rem 0;
+  border-bottom: 1px solid var(--cream-200);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.gh-pr-list li:last-child .gh-pr-item {
+  border-bottom: none;
+}
+
+a.gh-pr-item:hover {
+  background: var(--cream-200);
+  border-radius: 8px;
+  padding-left: 0.6rem;
+  border-bottom-color: transparent;
+}
+
+.gh-pr-repo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.62rem;
+  color: var(--text-tertiary);
+  word-break: break-all;
+}
+
+.gh-pr-number {
+  color: var(--text-tertiary);
+  opacity: 0.75;
+}
+
+.gh-pr-state {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 999px;
+  color: var(--text-primary);
+}
+
+.gh-pr-title {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+a.gh-pr-item:hover .gh-pr-title {
+  color: var(--mars-rust);
+}
+
+.gh-pr-time {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+}
+
+.gh-pr-fallback {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cream-300);
+  width: 100%;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  transition: color 0.2s ease;
+}
+
+.gh-pr-fallback:hover {
+  color: var(--mars-rust);
+}
+
+/* ---- Live GitHub commit grid ---- */
+.gh-grid-block {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--cream-200);
+}
+
+.gh-grid-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.55rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.gh-grid-total {
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.gh-grid {
+  display: flex;
+  gap: 3px;
+  padding: 2px 0;
+  text-decoration: none;
+}
+
+.gh-grid-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 0;
+}
+
+.gh-grid-cell {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 14px;
+  border-radius: 2px;
+  background: var(--cream-300);
+  transition: transform 0.15s ease, outline-color 0.15s ease;
+  outline: 1px solid transparent;
+}
+
+.gh-grid-cell-empty {
+  background: transparent;
+}
+
+.gh-grid:hover .gh-grid-cell:not(.gh-grid-cell-empty):hover {
+  transform: scale(1.25);
+  outline-color: var(--text-tertiary);
+}
+
+.gh-grid-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.55rem;
+  color: var(--text-tertiary);
+}
+
+.gh-grid-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.gh-grid-legend .gh-grid-cell {
+  width: 8px;
+  height: 8px;
+  aspect-ratio: auto;
+  flex: 0 0 auto;
+}
+
+/* ---- Scroll cue ---- */
+.academic-scroll-cue {
+  padding: clamp(2rem, 4vw, 3rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  animation: pulse-glow 2.5s ease-in-out infinite;
 }
 
 /* ========== SOCIAL SIDEBAR ========== */
