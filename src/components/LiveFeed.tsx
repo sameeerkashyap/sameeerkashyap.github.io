@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Project, Publication, BlogPost } from '@/lib/types';
 import { dispatchOpenTab } from '@/components/TabSystem';
@@ -177,28 +177,71 @@ interface LiveFeedProps {
 
 const ROTATE_MS = 4000;
 
+// Show/hide thresholds. The bar is ~64px tall, so collapsing it moves the
+// content under it; anything below DELTA_PX is treated as that reflow noise
+// rather than a real scroll gesture.
+const ALWAYS_VISIBLE_ABOVE = 140;
+const DELTA_PX = 14;
+
 export default function LiveFeed({ projects, publications, blog }: LiveFeedProps) {
-    const feed = buildFeed(projects ?? [], publications ?? [], blog ?? []);
+    // Rebuilding this constructs JSX for every feed item — do it only when the
+    // data changes, not on every scroll-driven render.
+    const feed = useMemo(
+        () => buildFeed(projects ?? [], publications ?? [], blog ?? []),
+        [projects, publications, blog],
+    );
     const [idx, setIdx] = useState(0);
     const [dir, setDir] = useState<1 | -1>(1);
     const [paused, setPaused] = useState(false);
-    const [visible, setVisible] = useState(true);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const barRef = useRef<HTMLDivElement>(null);
+    const visibleRef = useRef(true);
     const lastScrollY = useRef(0);
 
-    // Hide on scroll down, reveal on scroll up
+    // Hide on scroll down, reveal on scroll up.
+    //
+    // The bar slides on a CSS transform and keeps its box in the layout, so
+    // hiding it changes no geometry: nothing below it moves, the browser has
+    // nothing to re-anchor, and the threshold can't retrigger itself. The
+    // class is toggled straight on the node — scrolling never re-renders React.
     useEffect(() => {
         const container = document.getElementById('tab-content-home');
         if (!container) return;
-        const onScroll = () => {
-            const y = container.scrollTop;
-            if (y < 10) setVisible(true);
-            else if (y - lastScrollY.current > 4) setVisible(false);
-            else if (lastScrollY.current - y > 4) setVisible(true);
-            lastScrollY.current = y;
+
+        const apply = (next: boolean) => {
+            if (visibleRef.current === next) return;
+            visibleRef.current = next;
+            barRef.current?.classList.toggle('livefeed-hidden', !next);
         };
+
+        let raf: number | null = null;
+        const onScroll = () => {
+            if (raf !== null) return;
+            raf = requestAnimationFrame(() => {
+                raf = null;
+                const y = container.scrollTop;
+
+                if (y < ALWAYS_VISIBLE_ABOVE) {
+                    lastScrollY.current = y;
+                    apply(true);
+                    return;
+                }
+
+                const dy = y - lastScrollY.current;
+                // Under the threshold the gesture hasn't accumulated yet —
+                // leave lastScrollY alone so slow scrolling still adds up.
+                if (Math.abs(dy) < DELTA_PX) return;
+
+                lastScrollY.current = y;
+                apply(dy < 0);
+            });
+        };
+
         container.addEventListener('scroll', onScroll, { passive: true });
-        return () => container.removeEventListener('scroll', onScroll);
+        onScroll();
+        return () => {
+            container.removeEventListener('scroll', onScroll);
+            if (raf !== null) cancelAnimationFrame(raf);
+        };
     }, []);
 
     const advance = useCallback((step: 1 | -1) => {
@@ -206,12 +249,15 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
         setIdx(prev => (prev + step + feed.length) % feed.length);
     }, [feed.length]);
 
-    // Auto-rotate
+    // Auto-rotate on a single interval — no timer churn per item, and no work
+    // at all while the bar is hidden or hovered.
     useEffect(() => {
         if (paused) return;
-        timerRef.current = setTimeout(() => advance(1), ROTATE_MS);
-        return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-    }, [idx, paused, advance]);
+        const id = setInterval(() => {
+            if (visibleRef.current) advance(1);
+        }, ROTATE_MS);
+        return () => clearInterval(id);
+    }, [paused, advance]);
 
     if (feed.length === 0) return null;
 
@@ -219,12 +265,7 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
     const badge = BADGE[item.category];
 
     return (
-        <motion.div
-            initial={false}
-            animate={{ height: visible ? 'auto' : 0, opacity: visible ? 1 : 0 }}
-            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
-            style={{ overflow: 'hidden' }}
-        >
+        <div ref={barRef} className="livefeed-shell">
         <div
             className="livefeed-root"
             onMouseEnter={() => setPaused(true)}
@@ -539,6 +580,6 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
                 }
             `}</style>
         </div>
-        </motion.div>
+        </div>
     );
 }

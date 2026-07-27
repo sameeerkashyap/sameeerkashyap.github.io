@@ -9,6 +9,8 @@ import { sendGAEvent, TAP_CARD } from '@/analytics/events';
 
 interface HeroSectionProps {
     config: PortfolioConfig;
+    /** Opens the contact sheet; the chip is hidden when omitted. */
+    onContactClick?: () => void;
 }
 
 /* Scroll to a section inside the tab's scroll container. */
@@ -98,7 +100,7 @@ function ColumnHeader({ label, action }: { label: string; action?: { text: strin
     );
 }
 
-export default function HeroSection({ config }: HeroSectionProps) {
+export default function HeroSection({ config, onContactClick }: HeroSectionProps) {
     const primaryEducation = config.education[0];
     const fade = (delay: number) => ({
         initial: { opacity: 0, y: 12 },
@@ -147,17 +149,26 @@ export default function HeroSection({ config }: HeroSectionProps) {
                         </motion.div>
                     </div>
 
-                    {config.profileImage && (
-                        <motion.div
-                            className="academic-portrait"
-                            initial={{ opacity: 0, scale: 0.96 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.15, duration: 0.6 }}
-                        >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={config.profileImage} alt={config.name} />
-                        </motion.div>
-                    )}
+                    <motion.div
+                        className="academic-portrait-col"
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.15, duration: 0.6 }}
+                    >
+                        {config.profileImage && (
+                            <div className="academic-portrait">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={config.profileImage} alt={config.name} />
+                            </div>
+                        )}
+
+                        {onContactClick && (
+                            <button type="button" className="mono contact-chip" onClick={onContactClick}>
+                                <span className="contact-chip-dot" />
+                                Contact me
+                            </button>
+                        )}
+                    </motion.div>
                 </div>
             </div>
 

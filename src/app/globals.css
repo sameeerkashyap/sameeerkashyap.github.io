@@ -319,6 +319,196 @@
   margin-top: 0.25rem;
 }
 
+/* ---- Portrait column + contact chip ---- */
+.academic-portrait-col {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.6rem;
+}
+
+.contact-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--cream-300);
+  border-radius: 999px;
+  background: var(--cream-100);
+  color: var(--text-secondary);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.contact-chip:hover {
+  background: var(--cream-200);
+  border-color: var(--cream-400);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.contact-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mars-rust);
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+
+/* ---- Contact sheet (full screen, frosted) ---- */
+.contact-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #00000086;
+  backdrop-filter: blur(5px);
+}
+
+/* Static blur layer: never animated, never below opacity 1, so it always has
+   a live backdrop to sample. */
+.contact-blur {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 10, 9, 0.55);
+  backdrop-filter: blur(32px) saturate(130%);
+  -webkit-backdrop-filter: blur(32px) saturate(130%);
+}
+
+.contact-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+
+.contact-backdrop.is-open .contact-panel {
+  opacity: 1;
+}
+
+.contact-panel-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+}
+
+.contact-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 3vw, 2rem);
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: clamp(88px, 12vw, 124px);
+  padding: 1.35rem 0.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.contact-item:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-3px);
+}
+
+.contact-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+}
+
+.contact-close {
+  position: absolute;
+  top: clamp(1rem, 3vw, 2rem);
+  right: clamp(1rem, 3vw, 2rem);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.contact-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .contact-item {
+    width: 84px;
+    padding: 0.9rem 0.35rem;
+  }
+}
+
+/* ---- Live feed bar (sticky, transform-only hide) ---- */
+.livefeed-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  /* Keeps its box in flow at all times — hiding the bar moves nothing, so the
+     browser never re-anchors the scroll position. */
+  overflow-anchor: none;
+  pointer-events: none;
+}
+
+.livefeed-shell {
+  pointer-events: auto;
+  will-change: transform;
+  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s linear;
+}
+
+.livefeed-shell.livefeed-hidden {
+  transform: translateY(-110%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .livefeed-shell {
+    transition: opacity 0.2s linear;
+  }
+
+  .livefeed-shell.livefeed-hidden {
+    transform: none;
+    visibility: hidden;
+  }
+}
+
 /* ---- Live GitHub pull requests ---- */
 .gh-pr-block {
   margin-top: 1.25rem;

@@ -1,6 +1,8 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { PortfolioConfig } from "@/lib/types";
+import { buildSocialLinks } from "@/lib/socialLinks";
 import HeroSection from "@/components/HeroSection";
 import SocialSidebar from "@/components/SocialSidebar";
 import MarsScene from "@/components/MarsScene";
@@ -10,11 +12,25 @@ import PersonalSection from "@/components/PersonalSection";
 import Footer from "@/components/Footer";
 import TabSystem from "@/components/TabSystem";
 import LiveFeed from "@/components/LiveFeed";
+import ContactModal from "@/components/ContactModal";
 
 function HomeTabContent({ config }: { config: PortfolioConfig }) {
+  const [contactOpen, setContactOpen] = useState(false);
+  const socialLinks = useMemo(
+    () =>
+      buildSocialLinks({
+        github: config.github,
+        linkedin: config.linkedin,
+        twitter: config.twitter,
+        scholar: config.scholar,
+        email: config.email,
+      }),
+    [config.github, config.linkedin, config.twitter, config.scholar, config.email],
+  );
+
   return (
     <div className="relative">
-      <div style={{ position: "sticky", top: 0, zIndex: 60 }}>
+      <div className="livefeed-sticky">
         <LiveFeed
           projects={config.projects}
           publications={config.publications}
@@ -30,8 +46,14 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
         email={config.email}
       />
 
+      <ContactModal
+        open={contactOpen}
+        links={socialLinks}
+        onClose={() => setContactOpen(false)}
+      />
+
       <main className="page-content">
-        <HeroSection config={config} />
+        <HeroSection config={config} onContactClick={() => setContactOpen(true)} />
 
         <MarsScene currentWork={config.currentWork} />
 
