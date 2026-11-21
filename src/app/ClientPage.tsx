@@ -32,9 +32,12 @@ function HomeTabContent({ config }: { config: PortfolioConfig }) {
     <div className="relative">
       <div className="livefeed-sticky">
         <LiveFeed
-          projects={config.projects}
-          publications={config.publications}
-          blog={config.blog}
+          projects={[]}
+          publications={config.publications.slice(0, 1).map((publication) => ({
+            ...publication,
+            title: "arXiv: AEGIS — Climate Model of Mars",
+          }))}
+          blog={[]}
         />
       </div>
 

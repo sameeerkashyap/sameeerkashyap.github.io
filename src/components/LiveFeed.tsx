@@ -252,12 +252,12 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
     // Auto-rotate on a single interval — no timer churn per item, and no work
     // at all while the bar is hidden or hovered.
     useEffect(() => {
-        if (paused) return;
+        if (paused || feed.length <= 1) return;
         const id = setInterval(() => {
             if (visibleRef.current) advance(1);
         }, ROTATE_MS);
         return () => clearInterval(id);
-    }, [paused, advance]);
+    }, [paused, advance, feed.length]);
 
     if (feed.length === 0) return null;
 
@@ -318,7 +318,7 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
                 </div>
 
                 {/* Right: dots + arrows */}
-                <div className="livefeed-right">
+                {feed.length > 1 && <div className="livefeed-right">
                     <div className="livefeed-dots">
                         {feed.map((_, i) => (
                             <button
@@ -337,7 +337,7 @@ export default function LiveFeed({ projects, publications, blog }: LiveFeedProps
                     </div>
                     <ArrowBtn dir="prev" onClick={() => advance(-1)} />
                     <ArrowBtn dir="next" onClick={() => advance(1)} />
-                </div>
+                </div>}
             </div>
 
             <style>{`

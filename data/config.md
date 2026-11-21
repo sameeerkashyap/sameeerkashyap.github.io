@@ -12,8 +12,8 @@ githubActivity:
   count: 1            # how many pull requests to show (1–3)
   uniqueRepos: false   # true = one PR per repository, false = latest PRs even from the same repo
 
-stickyBanner: "Hiring for AI roles ? Let's chat! Get my resumé ->"
-stickyBannerLink: "https://drive.google.com/file/d/1IpJnyL4Uo7TlsJvLeqAbowLNzS0AQh8Q/view?usp=sharing"
+# stickyBanner: "Hiring for AI roles ? Let's chat! Get my resumé ->"
+# stickyBannerLink: "https://drive.google.com/file/d/1IpJnyL4Uo7TlsJvLeqAbowLNzS0AQh8Q/view?usp=sharing"
 
 education:
   - degree: "M.S in Computer Science & Engineering"
@@ -169,6 +169,12 @@ workExperience:
       - Freemium
 
 publications:
+  - title: "AEGIS: Differentiable Mars Climate Model with Neural Closures"
+    venue: "International Conference on Learning Representations (ICLR) 2027"
+    status: "Submitted"
+    link: "https://arxiv.org/abs/2610.04081"
+    year: 2026
+
   - title: "World Models Are the Right Foundation for Simulating Mars Terraforming"
     venue: "Neural Information Processing Systems (NeurIPS) 2026"
     status: "Preprint"
